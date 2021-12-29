@@ -1,5 +1,5 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 import disnakeSuperUtils
 
@@ -14,8 +14,8 @@ async def on_ready():
 @bot.command()
 async def paginator(ctx):
     messages = [
-        discord.Embed(title="Data (1/2)", description="Hello world"),
-        discord.Embed(title="Data (2/2)", description="Hello world"),
+        disnake.Embed(title="Data (1/2)", description="Hello world"),
+        disnake.Embed(title="Data (2/2)", description="Hello world"),
     ]
 
     await disnakeSuperUtils.ButtonsPageManager(ctx, messages).run()

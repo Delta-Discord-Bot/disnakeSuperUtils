@@ -1,14 +1,14 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 import disnakeSuperUtils
 
 
 class MyMessageGenerator(disnakeSuperUtils.MessageResponseGenerator):
-    def generate(self, message: discord.Message) -> bool:
+    def generate(self, message: disnake.Message) -> bool:
         # This is only an example, you can use the default generator if you want to.
         # The default generator ignores members with the 'ADMINISTRATOR' permission, and it triggers when it detects
-        # a URL or a discord invite.
+        # a URL or a disnake invite.
         # You could also make this ignore roles, permissions, etc...
 
         return "bad-word" in message.content

@@ -1,10 +1,10 @@
-import discord
-from discord.ext.commands import Bot, Context
+import disnake
+from disnake.ext.commands import Bot, Context
 
 import disnakeSuperUtils
 from disnakeSuperUtils import ModMailManager
 
-bot = Bot(command_prefix="-", intents=discord.Intents.all())
+bot = Bot(command_prefix="-", intents=disnake.Intents.all())
 ModmailManager = ModMailManager(bot, trigger="-modmail")
 
 
@@ -26,7 +26,7 @@ async def on_modmail_request(ctx: Context):
 
 
 @bot.command()
-async def setchannel(ctx, channel: discord.TextChannel):
+async def setchannel(ctx, channel: disnake.TextChannel):
     await ModmailManager.set_channel(channel)
     await ctx.send(f"Channel set to {channel.mention} for {channel.guild}")
 

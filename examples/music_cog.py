@@ -1,5 +1,5 @@
 import disnakeSuperUtils
-from discord.ext import commands
+from disnake.ext import commands
 from disnakeSuperUtils import MusicManager
 
 

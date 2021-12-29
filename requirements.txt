@@ -1,4 +1,4 @@
-discord~=1.7.3
+disnake~=1.7.3
 aiohttp>=3.6.3
 Pillow>=8.3.0
 requests~=2.25.1
@@ -6,7 +6,7 @@ spotipy~=2.16.1
 aiosqlite>=0.17.0
 motor>=2.5.0
 aiomysql~=0.0.21
-discord_components
+disnake_components
 pytz>=2021.1
 wavelink==1.0.0b30
 setuptools>=56.0.0

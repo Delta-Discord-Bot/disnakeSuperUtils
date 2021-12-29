@@ -1,11 +1,11 @@
 from datetime import datetime
 
-import discord
+import disnake
 
 import disnakeSuperUtils
 
 bot = disnakeSuperUtils.ManagerClient(
-    "token", command_prefix="-", intents=discord.Intents.all()
+    "token", command_prefix="-", intents=disnake.Intents.all()
 )
 
 InfractionManager = disnakeSuperUtils.InfractionManager(bot)
@@ -77,7 +77,7 @@ async def on_ready():
 @bot.command()
 async def mute(
     ctx,
-    member: discord.Member,
+    member: disnake.Member,
     time_of_mute: disnakeSuperUtils.TimeConvertor,
     reason: str = "No reason specified.",
 ):
@@ -90,7 +90,7 @@ async def mute(
 
 
 @bot.command()
-async def unmute(ctx, member: discord.Member):
+async def unmute(ctx, member: disnake.Member):
     if await MuteManager.unmute(member):
         await ctx.send(f"{member.mention} has been unmuted.")
     else:
@@ -100,7 +100,7 @@ async def unmute(ctx, member: discord.Member):
 @bot.command()
 async def ban(
     ctx,
-    member: discord.Member,
+    member: disnake.Member,
     time_of_ban: disnakeSuperUtils.TimeConvertor,
     reason: str = "No reason specified.",
 ):
@@ -109,7 +109,7 @@ async def ban(
 
 
 @bot.command()
-async def unban(ctx, user: discord.User):
+async def unban(ctx, user: disnake.User):
     if await BanManager.unban(user, guild=ctx.guild):
         await ctx.send(f"{user} has been unbanned.")
     else:
@@ -117,7 +117,7 @@ async def unban(ctx, user: discord.User):
 
 
 @bot.group(invoke_without_command=True)
-async def infractions(ctx, member: discord.Member):
+async def infractions(ctx, member: disnake.Member):
     member_infractions = await InfractionManager.get_infractions(member)
 
     await disnakeSuperUtils.PageManager(
@@ -127,10 +127,10 @@ async def infractions(ctx, member: discord.Member):
 
 
 @infractions.command()
-async def add(ctx, member: discord.Member, reason: str = "No reason specified."):
+async def add(ctx, member: disnake.Member, reason: str = "No reason specified."):
     infraction = await InfractionManager.warn(ctx, member, reason)
 
-    embed = discord.Embed(title=f"{member} has been warned.", color=0x00FF00)
+    embed = disnake.Embed(title=f"{member} has been warned.", color=0x00FF00)
 
     embed.add_field(name="Reason", value=await infraction.reason(), inline=False)
     embed.add_field(name="Infraction ID", value=infraction.id, inline=False)
@@ -143,7 +143,7 @@ async def add(ctx, member: discord.Member, reason: str = "No reason specified.")
 
 
 @infractions.command()
-async def get(ctx, member: discord.Member, infraction_id: str):
+async def get(ctx, member: disnake.Member, infraction_id: str):
     infractions_found = await InfractionManager.get_infractions(
         member, infraction_id=infraction_id
     )
@@ -156,7 +156,7 @@ async def get(ctx, member: discord.Member, infraction_id: str):
 
     infraction = infractions_found[0]
 
-    embed = discord.Embed(
+    embed = disnake.Embed(
         title=f"Infraction found on {member}'s account!", color=0x00FF00
     )
 
@@ -172,7 +172,7 @@ async def get(ctx, member: discord.Member, infraction_id: str):
 
 @infractions.command()
 async def get_before(
-    ctx, member: discord.Member, from_time: disnakeSuperUtils.TimeConvertor
+    ctx, member: disnake.Member, from_time: disnakeSuperUtils.TimeConvertor
 ):
     from_timestamp = datetime.utcnow().timestamp() - from_time
 
@@ -187,7 +187,7 @@ async def get_before(
 
 
 @infractions.command()
-async def clear(ctx, member: discord.Member):
+async def clear(ctx, member: disnake.Member):
     removed_infractions = []
 
     for infraction in await InfractionManager.get_infractions(member):
@@ -200,7 +200,7 @@ async def clear(ctx, member: discord.Member):
 
 
 @infractions.command()
-async def remove(ctx, member: discord.Member, infraction_id: str):
+async def remove(ctx, member: disnake.Member, infraction_id: str):
     infractions_found = await InfractionManager.get_infractions(
         member, infraction_id=infraction_id
     )
@@ -213,7 +213,7 @@ async def remove(ctx, member: discord.Member, infraction_id: str):
 
     removed_infraction = await infractions_found[0].delete()
 
-    embed = discord.Embed(
+    embed = disnake.Embed(
         title=f"Infraction removed from {member}'s account!", color=0x00FF00
     )
 
@@ -230,7 +230,7 @@ async def remove(ctx, member: discord.Member, infraction_id: str):
 
 @infractions.command()
 async def remove_before(
-    ctx, member: discord.Member, from_time: disnakeSuperUtils.TimeConvertor
+    ctx, member: disnake.Member, from_time: disnakeSuperUtils.TimeConvertor
 ):
     from_timestamp = datetime.utcnow().timestamp() - from_time
 

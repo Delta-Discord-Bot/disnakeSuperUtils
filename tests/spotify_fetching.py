@@ -21,7 +21,7 @@ async def start_testing():
 
     Conclusion
     ----------
-        Our spotify client is ~80x faster than spotify_dl and is optimised for discord.py spotify fetching.
+        Our spotify client is ~80x faster than spotify_dl and is optimised for disnake.py spotify fetching.
     """
 
     tester = Tester()

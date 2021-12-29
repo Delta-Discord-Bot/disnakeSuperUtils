@@ -1,15 +1,15 @@
 from math import floor
 
-from discord.ext import commands
+from disnake.ext import commands
 
 import disnakeSuperUtils
 from disnakeSuperUtils import MusicManager
-import discord
+import disnake
 
 client_id = ""
 client_secret = ""
 
-bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
+bot = commands.Bot(command_prefix="-", intents=disnake.Intents.all())
 # MusicManager = MusicManager(bot, spotify_support=False)
 
 
@@ -75,7 +75,7 @@ async def join(ctx):
 
 
 @bot.group(invoke_without_command=True)
-async def playlists(ctx, user: discord.User):
+async def playlists(ctx, user: disnake.User):
     user_playlists = await MusicManager.get_user_playlists(user)
 
     formatted_playlists = [
@@ -192,7 +192,7 @@ async def lyrics(ctx, query: str = None):
         page_manager = disnakeSuperUtils.PageManager(
             ctx,
             [
-                discord.Embed(
+                disnake.Embed(
                     title=f"Lyrics for '{title}' by '{author}', (Page {i + 1}/{len(res)})",
                     description=x,
                 )

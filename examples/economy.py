@@ -1,9 +1,9 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 import disnakeSuperUtils
 
-bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
+bot = commands.Bot(command_prefix="-", intents=disnake.Intents.all())
 EconomyManager = disnakeSuperUtils.EconomyManager(bot)
 
 

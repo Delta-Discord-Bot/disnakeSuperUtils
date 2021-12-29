@@ -1,9 +1,9 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 import disnakeSuperUtils
 
-bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
+bot = commands.Bot(command_prefix="-", intents=disnake.Intents.all())
 
 
 class Leveling(commands.Cog, disnakeSuperUtils.CogManager.Cog):
@@ -35,7 +35,7 @@ class Leveling(commands.Cog, disnakeSuperUtils.CogManager.Cog):
         )
 
     @commands.command()
-    async def rank(self, ctx, member: discord.Member = None):
+    async def rank(self, ctx, member: disnake.Member = None):
         mem_obj = member if member else ctx.author
         member_data = await self.LevelingManager.get_account(mem_obj)
 
@@ -69,7 +69,7 @@ class Leveling(commands.Cog, disnakeSuperUtils.CogManager.Cog):
         await ctx.send(file=image)
 
     @commands.command()
-    async def set_roles(self, ctx, interval: int, *roles: discord.Role):
+    async def set_roles(self, ctx, interval: int, *roles: disnake.Role):
         await self.LevelingManager.set_interval(ctx.guild, interval)
         await self.LevelingManager.set_roles(ctx.guild, roles)
 

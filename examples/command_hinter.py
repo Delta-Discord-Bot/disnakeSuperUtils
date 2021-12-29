@@ -1,6 +1,6 @@
 from typing import List
 
-from discord.ext import commands
+from disnake.ext import commands
 
 import disnakeSuperUtils
 

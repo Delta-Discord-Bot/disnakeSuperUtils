@@ -1,12 +1,12 @@
 from datetime import datetime, timezone
 
-import discord
+import disnake
 import pytz
-from discord.ext import commands
+from disnake.ext import commands
 
 import disnakeSuperUtils
 
-bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
+bot = commands.Bot(command_prefix="-", intents=disnake.Intents.all())
 BirthdayManager = disnakeSuperUtils.BirthdayManager(bot)
 
 
@@ -44,7 +44,7 @@ async def on_member_birthday(birthday_member):
     channel = birthday_member.member.guild.get_channel(...)
 
     if channel:
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Happy birthday!",
             description=f"Happy {ordinal(await birthday_member.age())} birthday, {birthday_member.member.mention}!",
             color=0x00FF00,
@@ -83,7 +83,7 @@ async def upcoming(ctx):
 
 
 @bot.command()
-async def birthday(ctx, member: discord.Member = None):
+async def birthday(ctx, member: disnake.Member = None):
     member = member or ctx.author
 
     member_birthday = await BirthdayManager.get_birthday(member)
@@ -92,7 +92,7 @@ async def birthday(ctx, member: discord.Member = None):
         await ctx.send("The specified member does not have a birthday setup!")
         return
 
-    embed = discord.Embed(title=f"{member}'s Birthday", color=0x00FF00)
+    embed = disnake.Embed(title=f"{member}'s Birthday", color=0x00FF00)
 
     embed.add_field(
         name="Birthday",
@@ -120,7 +120,7 @@ async def delete_birthday(ctx):
 
     birthday_partial = await birthday_member.delete()
 
-    embed = discord.Embed(title=f"Deleted {ctx.author}'s Birthday.", color=0x00FF00)
+    embed = disnake.Embed(title=f"Deleted {ctx.author}'s Birthday.", color=0x00FF00)
 
     embed.add_field(
         name="Date of Birth", value=str(birthday_partial.birthday_date), inline=False

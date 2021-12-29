@@ -17,7 +17,7 @@ async def start_testing():
 
     Conclusion
     ----------
-        Our youtube client is ~15x faster than youtube_dl and is optimised for discord.py youtube fetching.
+        Our youtube client is ~15x faster than youtube_dl and is optimised for disnake.py youtube fetching.
         youtube_dl is not async, which makes it slow and not optimal for our use case.
     """
 

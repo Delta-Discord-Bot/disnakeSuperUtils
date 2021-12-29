@@ -1,13 +1,13 @@
 from typing import List
 
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 import disnakeSuperUtils
 
 
 class MySpamDetector(disnakeSuperUtils.SpamDetectionGenerator):
-    def generate(self, last_messages: List[discord.Message]) -> bool:
+    def generate(self, last_messages: List[disnake.Message]) -> bool:
         # This is only an example, you can use the default generator if you want to.
         # The default generator ignores members with the 'ADMINISTRATOR' permission, and it triggers when it detects
         # similarity in the last 10 messages of the member.

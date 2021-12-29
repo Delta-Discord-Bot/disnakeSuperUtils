@@ -1,8 +1,8 @@
 from typing import List
 
-import discord
+import disnake
 
-from discord.ext import commands
+from disnake.ext import commands
 
 import disnakeSuperUtils
 
@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix="-")
 TwitchManager = disnakeSuperUtils.TwitchManager(bot, "CLIENT_ID", "CLIENT_SECRET")
 
 
-def add_stream_fields(embed: discord.Embed, stream: dict):
+def add_stream_fields(embed: disnake.Embed, stream: dict):
     embed.add_field(
         name="Title",
         value=f"[{stream['title']}](https://twitch.tv/{stream['user_name']})",
@@ -31,12 +31,12 @@ def add_stream_fields(embed: discord.Embed, stream: dict):
 
 
 @TwitchManager.event()
-async def on_stream(guild: discord.Guild, streams: List[dict]):
+async def on_stream(guild: disnake.Guild, streams: List[dict]):
     channel = guild.get_channel(...)
 
     if channel:
         for stream in streams:
-            embed = discord.Embed(
+            embed = disnake.Embed(
                 title=f"{stream['user_name']} is now live!", color=0x00FF00
             )
 
@@ -46,12 +46,12 @@ async def on_stream(guild: discord.Guild, streams: List[dict]):
 
 
 @TwitchManager.event()
-async def on_stream_end(guild: discord.Guild, streams: List[dict]):
+async def on_stream_end(guild: disnake.Guild, streams: List[dict]):
     channel = guild.get_channel(...)
 
     if channel:
         for stream in streams:
-            embed = discord.Embed(
+            embed = disnake.Embed(
                 title=f"{stream['user_name']} has stopped streaming!", color=0x00FF00
             )
 
@@ -79,7 +79,7 @@ async def lookup(ctx, *, channel: str):
         await ctx.send(f"'{channel}' is offline.")
         return
 
-    embed = discord.Embed(title=f"'{channel}' is currently streaming!", color=0x00FF00)
+    embed = disnake.Embed(title=f"'{channel}' is currently streaming!", color=0x00FF00)
 
     add_stream_fields(embed, stream_info)
 

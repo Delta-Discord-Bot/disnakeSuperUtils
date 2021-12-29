@@ -1,9 +1,9 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 import disnakeSuperUtils
 
-bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
+bot = commands.Bot(command_prefix="-", intents=disnake.Intents.all())
 LevelingManager = disnakeSuperUtils.LevelingManager(bot, award_role=True)
 ImageManager = (
     disnakeSuperUtils.ImageManager()
@@ -27,7 +27,7 @@ async def on_level_up(message, member_data, roles):
 
 
 @bot.command()
-async def rank(ctx, member: discord.Member = None):
+async def rank(ctx, member: disnake.Member = None):
     mem_obj = member if member else ctx.author
     member_data = await LevelingManager.get_account(mem_obj)
 
@@ -59,7 +59,7 @@ async def rank(ctx, member: discord.Member = None):
 
 
 @bot.command()
-async def set_roles(ctx, interval: int, *roles: discord.Role):
+async def set_roles(ctx, interval: int, *roles: disnake.Role):
     await LevelingManager.set_interval(ctx.guild, interval)
     await LevelingManager.set_roles(ctx.guild, roles)
 

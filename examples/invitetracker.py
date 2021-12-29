@@ -1,9 +1,9 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 import disnakeSuperUtils
 
-bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
+bot = commands.Bot(command_prefix="-", intents=disnake.Intents.all())
 InviteTracker = disnakeSuperUtils.InviteTracker(bot)
 
 
@@ -27,7 +27,7 @@ async def on_member_join(member):
 
 
 @bot.command()
-async def info(ctx, member: discord.Member = None):
+async def info(ctx, member: disnake.Member = None):
     member = ctx.author if not member else member
     invited_members = await InviteTracker.get_user_info(member).get_invited_users()
 
