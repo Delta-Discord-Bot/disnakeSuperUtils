@@ -1,7 +1,7 @@
 from discord.ext import commands
 
-import discordSuperUtils
-from discordSuperUtils import LavalinkMusicManager
+import disnakeSuperUtils
+from disnakeSuperUtils import LavalinkMusicManager
 import discord
 import time
 
@@ -112,7 +112,7 @@ async def lyrics(ctx, query: str = None):
                 continue
             current += split + "\n"
 
-        page_manager = discordSuperUtils.PageManager(
+        page_manager = disnakeSuperUtils.PageManager(
             ctx,
             [
                 discord.Embed(
@@ -160,7 +160,7 @@ async def bassboost(ctx):
     # -equalizer bass|piano|metal
     # you can access the equalizer mode using MusicManger.get_equalizer(ctx)
 
-    await MusicManager.set_equalizer(ctx, discordSuperUtils.Equalizer.boost())
+    await MusicManager.set_equalizer(ctx, disnakeSuperUtils.Equalizer.boost())
 
 
 @bot.command()
@@ -195,7 +195,7 @@ async def history(ctx):
             for x in ctx_queue.history
         ]
 
-        embeds = discordSuperUtils.generate_embeds(
+        embeds = disnakeSuperUtils.generate_embeds(
             formatted_history,
             "Song History",
             "Shows all played songs",
@@ -203,7 +203,7 @@ async def history(ctx):
             string_format="{}",
         )
 
-        page_manager = discordSuperUtils.PageManager(ctx, embeds, public=True)
+        page_manager = disnakeSuperUtils.PageManager(ctx, embeds, public=True)
         await page_manager.run()
 
 
@@ -220,7 +220,7 @@ async def queue(ctx):
             for x in ctx_queue.queue[ctx_queue.pos + 1 :]
         ]
 
-        embeds = discordSuperUtils.generate_embeds(
+        embeds = disnakeSuperUtils.generate_embeds(
             formatted_queue,
             "Queue",
             f"Now Playing: {await MusicManager.now_playing(ctx)}",
@@ -228,7 +228,7 @@ async def queue(ctx):
             string_format="{}",
         )
 
-        page_manager = discordSuperUtils.PageManager(ctx, embeds, public=True)
+        page_manager = disnakeSuperUtils.PageManager(ctx, embeds, public=True)
         await page_manager.run()
 
 
@@ -243,13 +243,13 @@ async def ls(ctx):
         loop = queue.loop
         loop_status = None
 
-        if loop == discordSuperUtils.Loops.LOOP:
+        if loop == disnakeSuperUtils.Loops.LOOP:
             loop_status = "Looping enabled."
 
-        elif loop == discordSuperUtils.Loops.QUEUE_LOOP:
+        elif loop == disnakeSuperUtils.Loops.QUEUE_LOOP:
             loop_status = "Queue looping enabled."
 
-        elif loop == discordSuperUtils.Loops.NO_LOOP:
+        elif loop == disnakeSuperUtils.Loops.NO_LOOP:
             loop_status = "No loop enabled."
 
         if loop_status:

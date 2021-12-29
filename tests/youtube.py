@@ -2,7 +2,7 @@ import asyncio
 
 import youtube_dl as youtube_dl
 
-import discordSuperUtils
+import disnakeSuperUtils
 from tester import Tester
 
 
@@ -28,7 +28,7 @@ async def start_testing():
 
 
 async def fetch_youtube_client():
-    youtube_client = discordSuperUtils.YoutubeClient()
+    youtube_client = disnakeSuperUtils.YoutubeClient()
 
     r = await youtube_client.get_videos("PLcirGkCPmbmFeQ1sm4wFciF03D_EroIfr")
 

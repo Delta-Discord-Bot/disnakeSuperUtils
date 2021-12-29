@@ -1,8 +1,8 @@
 import discord
 from discord.ext.commands import Bot, Context
 
-import discordSuperUtils
-from discordSuperUtils import ModMailManager
+import disnakeSuperUtils
+from disnakeSuperUtils import ModMailManager
 
 bot = Bot(command_prefix="-", intents=discord.Intents.all())
 ModmailManager = ModMailManager(bot, trigger="-modmail")
@@ -10,7 +10,7 @@ ModmailManager = ModMailManager(bot, trigger="-modmail")
 
 @bot.event
 async def on_ready():
-    db = discordSuperUtils.DatabaseManager.connect(...)
+    db = disnakeSuperUtils.DatabaseManager.connect(...)
     await ModmailManager.connect_to_database(db, ["modmail"])
 
     print("ModMailManager is ready.", bot.user)

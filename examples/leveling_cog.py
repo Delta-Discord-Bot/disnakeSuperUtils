@@ -1,17 +1,17 @@
 import discord
 from discord.ext import commands
 
-import discordSuperUtils
+import disnakeSuperUtils
 
 bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
 
 
-class Leveling(commands.Cog, discordSuperUtils.CogManager.Cog):
+class Leveling(commands.Cog, disnakeSuperUtils.CogManager.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        self.LevelingManager = discordSuperUtils.LevelingManager(bot, award_role=True)
-        self.ImageManager = discordSuperUtils.ImageManager()
+        self.LevelingManager = disnakeSuperUtils.LevelingManager(bot, award_role=True)
+        self.ImageManager = disnakeSuperUtils.ImageManager()
         super().__init__()  # Make sure you define your managers before running CogManager.Cog's __init__ function.
         # Incase you do not, CogManager.Cog wont find the managers and will not link them to the events.
         # Alternatively, you can pass your managers in CogManager.Cog's __init__ function incase you are using the same
@@ -20,14 +20,14 @@ class Leveling(commands.Cog, discordSuperUtils.CogManager.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        database = discordSuperUtils.DatabaseManager.connect(...)
+        database = disnakeSuperUtils.DatabaseManager.connect(...)
         await self.LevelingManager.connect_to_database(
             database, ["xp", "roles", "role_list"]
         )
 
         print("Leveling manager is ready.", bot.user)
 
-    @discordSuperUtils.CogManager.event(discordSuperUtils.LevelingManager)
+    @disnakeSuperUtils.CogManager.event(disnakeSuperUtils.LevelingManager)
     async def on_level_up(self, message, member_data, roles):
         await message.reply(
             f"You are now level {await member_data.level()}"
@@ -52,7 +52,7 @@ class Leveling(commands.Cog, discordSuperUtils.CogManager.Cog):
         image = await self.ImageManager.create_leveling_profile(
             member=mem_obj,
             member_account=member_data,
-            background=discordSuperUtils.Backgrounds.GALAXY,
+            background=disnakeSuperUtils.Backgrounds.GALAXY,
             # name_color=(255, 255, 255),
             # rank_color=(127, 255, 0),
             # level_color=(255, 255, 255),
@@ -84,9 +84,9 @@ class Leveling(commands.Cog, discordSuperUtils.CogManager.Cog):
             f"Member: {x.member}, XP: {await x.xp()}" for x in guild_leaderboard
         ]
 
-        await discordSuperUtils.PageManager(
+        await disnakeSuperUtils.PageManager(
             ctx,
-            discordSuperUtils.generate_embeds(
+            disnakeSuperUtils.generate_embeds(
                 formatted_leaderboard,
                 title="Leveling Leaderboard",
                 fields=25,

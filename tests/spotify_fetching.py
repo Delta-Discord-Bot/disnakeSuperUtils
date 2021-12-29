@@ -2,7 +2,7 @@ import asyncio
 
 from spotify_dl import spotify
 
-import discordSuperUtils
+import disnakeSuperUtils
 from tester import Tester
 
 client_id = ...
@@ -50,7 +50,7 @@ async def fetch_spotify_dl_client():
 
 
 loop = asyncio.get_event_loop()
-spotify_client = discordSuperUtils.SpotifyClient(
+spotify_client = disnakeSuperUtils.SpotifyClient(
     client_id, client_secret, asyncio.get_event_loop()
 )
 loop.run_until_complete(start_testing())

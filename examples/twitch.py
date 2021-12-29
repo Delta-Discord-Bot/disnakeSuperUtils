@@ -4,10 +4,10 @@ import discord
 
 from discord.ext import commands
 
-import discordSuperUtils
+import disnakeSuperUtils
 
 bot = commands.Bot(command_prefix="-")
-TwitchManager = discordSuperUtils.TwitchManager(bot, "CLIENT_ID", "CLIENT_SECRET")
+TwitchManager = disnakeSuperUtils.TwitchManager(bot, "CLIENT_ID", "CLIENT_SECRET")
 
 
 def add_stream_fields(embed: discord.Embed, stream: dict):
@@ -62,7 +62,7 @@ async def on_stream_end(guild: discord.Guild, streams: List[dict]):
 
 @bot.event
 async def on_ready():
-    database = discordSuperUtils.DatabaseManager.connect(...)
+    database = disnakeSuperUtils.DatabaseManager.connect(...)
     await TwitchManager.connect_to_database(
         database,
         ["channels"],

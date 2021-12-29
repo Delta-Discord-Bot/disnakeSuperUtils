@@ -1,18 +1,18 @@
 import discord
 from discord.ext import commands
 
-import discordSuperUtils
+import disnakeSuperUtils
 
 bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
-LevelingManager = discordSuperUtils.LevelingManager(bot, award_role=True)
+LevelingManager = disnakeSuperUtils.LevelingManager(bot, award_role=True)
 ImageManager = (
-    discordSuperUtils.ImageManager()
+    disnakeSuperUtils.ImageManager()
 )  # LevelingManager uses ImageManager to create the rank command.
 
 
 @bot.event
 async def on_ready():
-    database = discordSuperUtils.DatabaseManager.connect(...)
+    database = disnakeSuperUtils.DatabaseManager.connect(...)
     await LevelingManager.connect_to_database(database, ["xp", "roles", "role_list"])
 
     print("Leveling manager is ready.", bot.user)
@@ -42,7 +42,7 @@ async def rank(ctx, member: discord.Member = None):
     image = await ImageManager.create_leveling_profile(
         member=mem_obj,
         member_account=member_data,
-        background=discordSuperUtils.Backgrounds.GALAXY,
+        background=disnakeSuperUtils.Backgrounds.GALAXY,
         # name_color=(255, 255, 255),
         # rank_color=(127, 255, 0),
         # level_color=(255, 255, 255),
@@ -75,9 +75,9 @@ async def leaderboard(ctx):
         f"Member: {x.member}, XP: {await x.xp()}" for x in guild_leaderboard
     ]
 
-    await discordSuperUtils.PageManager(
+    await disnakeSuperUtils.PageManager(
         ctx,
-        discordSuperUtils.generate_embeds(
+        disnakeSuperUtils.generate_embeds(
             formatted_leaderboard,
             title="Leveling Leaderboard",
             fields=25,

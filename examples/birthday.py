@@ -4,10 +4,10 @@ import discord
 import pytz
 from discord.ext import commands
 
-import discordSuperUtils
+import disnakeSuperUtils
 
 bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
-BirthdayManager = discordSuperUtils.BirthdayManager(bot)
+BirthdayManager = disnakeSuperUtils.BirthdayManager(bot)
 
 
 def ordinal(num: int) -> str:
@@ -57,7 +57,7 @@ async def on_member_birthday(birthday_member):
 
 @bot.event
 async def on_ready():
-    database = discordSuperUtils.DatabaseManager.connect(...)
+    database = disnakeSuperUtils.DatabaseManager.connect(...)
     await BirthdayManager.connect_to_database(database, ["birthdays"])
 
     print("Birthday manager is ready.", bot.user)
@@ -71,9 +71,9 @@ async def upcoming(ctx):
         for x in guild_upcoming
     ]
 
-    await discordSuperUtils.PageManager(
+    await disnakeSuperUtils.PageManager(
         ctx,
-        discordSuperUtils.generate_embeds(
+        disnakeSuperUtils.generate_embeds(
             formatted_upcoming,
             title="Upcoming Birthdays",
             fields=25,
@@ -145,7 +145,7 @@ async def setup_birthday(ctx):
     # and he cloud be wished a happy birthday before his birthday. (The UTC offsets might have issues with DST, too!)
     # that's why we chose pytz, to make custom timezones user-friendly and easy to setup.
 
-    answers, timed_out = await discordSuperUtils.questionnaire(
+    answers, timed_out = await disnakeSuperUtils.questionnaire(
         ctx, questions, member=ctx.author
     )
     # The questionnaire supports embeds.

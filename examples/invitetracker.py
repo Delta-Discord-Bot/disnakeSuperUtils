@@ -1,15 +1,15 @@
 import discord
 from discord.ext import commands
 
-import discordSuperUtils
+import disnakeSuperUtils
 
 bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
-InviteTracker = discordSuperUtils.InviteTracker(bot)
+InviteTracker = disnakeSuperUtils.InviteTracker(bot)
 
 
 @bot.event
 async def on_ready():
-    database = discordSuperUtils.DatabaseManager.connect(...)
+    database = disnakeSuperUtils.DatabaseManager.connect(...)
     await InviteTracker.connect_to_database(database, ["invites"])
     print("Invite tracker is ready.", bot.user)
 

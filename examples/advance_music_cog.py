@@ -3,8 +3,8 @@ from typing import Optional
 import disnake
 from disnake.ext import commands
 
-import discordSuperUtils
-from discordSuperUtils import MusicManager
+import disnakeSuperUtils
+from disnakeSuperUtils import MusicManager
 
 import datetime
 
@@ -92,7 +92,7 @@ def indexer(index: int):
 
 
 # Music commands
-class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
+class Music(commands.Cog, disnakeSuperUtils.CogManager.Cog, name="Music"):
     def __init__(self, bot):
         self.bot = bot
         self.skip_votes = {}  # Skip vote counter dictionary
@@ -111,7 +111,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
 
         # If using spotify support use this instead ^^^
 
-        self.ImageManager = discordSuperUtils.ImageManager()
+        self.ImageManager = disnakeSuperUtils.ImageManager()
         super().__init__()
 
     # Play function
@@ -133,18 +133,18 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             await ctx.send("Query not found.")
 
     # DSU Error handler
-    @discordSuperUtils.CogManager.event(discordSuperUtils.MusicManager)
+    @disnakeSuperUtils.CogManager.event(disnakeSuperUtils.MusicManager)
     async def on_music_error(self, ctx, error):
         errors = {
-            discordSuperUtils.NotPlaying: "Not playing any music right now...",
-            discordSuperUtils.NotConnected: f"Bot not connected to a voice channel!",
-            discordSuperUtils.NotPaused: "Player is not paused!",
-            discordSuperUtils.QueueEmpty: "The queue is empty!",
-            discordSuperUtils.AlreadyConnected: "Already connected to voice channel!",
-            discordSuperUtils.RemoveIndexInvalid: "Remove index is invalid!",
-            discordSuperUtils.SkipError: "There is no song to skip to!",
-            discordSuperUtils.UserNotConnected: "User is not connected to a voice channel!",
-            discordSuperUtils.InvalidSkipIndex: "That skip index is invalid!",
+            disnakeSuperUtils.NotPlaying: "Not playing any music right now...",
+            disnakeSuperUtils.NotConnected: f"Bot not connected to a voice channel!",
+            disnakeSuperUtils.NotPaused: "Player is not paused!",
+            disnakeSuperUtils.QueueEmpty: "The queue is empty!",
+            disnakeSuperUtils.AlreadyConnected: "Already connected to voice channel!",
+            disnakeSuperUtils.RemoveIndexInvalid: "Remove index is invalid!",
+            disnakeSuperUtils.SkipError: "There is no song to skip to!",
+            disnakeSuperUtils.UserNotConnected: "User is not connected to a voice channel!",
+            disnakeSuperUtils.InvalidSkipIndex: "That skip index is invalid!",
         }
 
         for error_type, response in errors.items():
@@ -156,7 +156,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
         raise error
 
     # On music play event
-    @discordSuperUtils.CogManager.event(discordSuperUtils.MusicManager)
+    @disnakeSuperUtils.CogManager.event(disnakeSuperUtils.MusicManager)
     async def on_play(self, ctx, player):  # This returns a player object
 
         # Extracting useful data from player object
@@ -179,14 +179,14 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             self.skip_votes.pop(ctx.guild.id)
 
     # On queue end event
-    @discordSuperUtils.CogManager.event(discordSuperUtils.MusicManager)
+    @disnakeSuperUtils.CogManager.event(disnakeSuperUtils.MusicManager)
     async def on_queue_end(self, ctx):
         print(f"The queue has ended in {ctx}")
         await ctx.send("Queue ended")
         # You could wait and check activity, etc...
 
     # On inactivity disconnect event
-    @discordSuperUtils.CogManager.event(discordSuperUtils.MusicManager)
+    @disnakeSuperUtils.CogManager.event(disnakeSuperUtils.MusicManager)
     async def on_inactivity_disconnect(self, ctx):
         print(f"I have left {ctx} due to inactivity")
         await ctx.send("Left Music Channel due to inactivity")
@@ -194,7 +194,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
     # On ready event
     @commands.Cog.listener()
     async def on_ready(self):
-        database = discordSuperUtils.DatabaseManager.connect(...)  # Database connection
+        database = disnakeSuperUtils.DatabaseManager.connect(...)  # Database connection
         await self.MusicManager.connect_to_database(database, ["playlists"])
 
         print("Music manager is ready.", self.bot.user)
@@ -237,7 +237,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             for embed in embeds:
                 embed.timestamp = datetime.datetime.utcnow()
 
-            page_manager = discordSuperUtils.PageManager(
+            page_manager = disnakeSuperUtils.PageManager(
                 ctx,
                 embeds,
                 public=True,
@@ -259,9 +259,9 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
 
             # Loop status
             loop = (await self.MusicManager.get_queue(ctx)).loop
-            if loop == discordSuperUtils.Loops.LOOP:
+            if loop == disnakeSuperUtils.Loops.LOOP:
                 loop_status = "Looping enabled."
-            elif loop == discordSuperUtils.Loops.QUEUE_LOOP:
+            elif loop == disnakeSuperUtils.Loops.QUEUE_LOOP:
                 loop_status = "Queue looping enabled."
             else:
                 loop_status = "Looping Disabled"
@@ -374,7 +374,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
                 for x in queue.history
             ]
 
-            embeds = discordSuperUtils.generate_embeds(
+            embeds = disnakeSuperUtils.generate_embeds(
                 formatted_history,
                 "Song History",
                 "Shows all played songs",
@@ -385,7 +385,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             for embed in embeds:
                 embed.timestamp = datetime.datetime.utcnow()
 
-            await discordSuperUtils.PageManager(ctx, embeds, public=True).run()
+            await disnakeSuperUtils.PageManager(ctx, embeds, public=True).run()
 
     # Stop command
     @commands.command()
@@ -478,7 +478,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
                 "url"
             ]
 
-            embeds = discordSuperUtils.generate_embeds(
+            embeds = disnakeSuperUtils.generate_embeds(
                 formatted_queue,
                 "Queue",  # Title of embed
                 f"""**Now Playing:
@@ -492,7 +492,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             for embed in embeds:
                 embed.timestamp = datetime.datetime.utcnow()
 
-            await discordSuperUtils.PageManager(ctx, embeds, public=True).run()
+            await disnakeSuperUtils.PageManager(ctx, embeds, public=True).run()
 
     # Loop status command
     @commands.command()
@@ -501,13 +501,13 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             loop = queue.loop
             loop_status = None
 
-            if loop == discordSuperUtils.Loops.LOOP:
+            if loop == disnakeSuperUtils.Loops.LOOP:
                 loop_status = "Looping enabled."
 
-            elif loop == discordSuperUtils.Loops.QUEUE_LOOP:
+            elif loop == disnakeSuperUtils.Loops.QUEUE_LOOP:
                 loop_status = "Queue looping enabled."
 
-            elif loop == discordSuperUtils.Loops.NO_LOOP:
+            elif loop == disnakeSuperUtils.Loops.NO_LOOP:
                 loop_status = "No loop enabled."
 
             if loop_status:
@@ -593,7 +593,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             for user_playlist in user_playlists
         ]
 
-        embeds = discordSuperUtils.generate_embeds(
+        embeds = disnakeSuperUtils.generate_embeds(
             formatted_playlists,
             f"Playlists of {user}",
             f"Showing {user.mention}'s playlists.",
@@ -604,7 +604,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
         for embed in embeds:
             embed.timestamp = datetime.datetime.utcnow()
 
-        page_manager = discordSuperUtils.PageManager(ctx, embeds, public=True)
+        page_manager = disnakeSuperUtils.PageManager(ctx, embeds, public=True)
         await page_manager.run()
 
     # Playlist add command

@@ -1,7 +1,7 @@
 include README.md
 include LICENSE
 include requirements.txt
-include discordSuperUtils/*
-include discordSuperUtils/assets/*
-include discordSuperUtils/music/*
-include discordSuperUtils/music/lavalink/*
+include disnakeSuperUtils/*
+include disnakeSuperUtils/assets/*
+include disnakeSuperUtils/music/*
+include disnakeSuperUtils/music/lavalink/*

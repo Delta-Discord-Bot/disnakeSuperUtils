@@ -4,13 +4,13 @@ f = open("README.md", "r")
 README = f.read()
 
 setup(
-    name="discordSuperUtils",
-    packages=["discordSuperUtils"],
+    name="disnakeSuperUtils",
+    packages=["disnakeSuperUtils"],
     package_data={
-        "discordSuperUtils.assets": ["*"],
+        "disnakeSuperUtils.assets": ["*"],
         "": ["*.png", "*.ttf"],
-        "discordSuperUtils.music": ["*"],
-        "discordSuperUtils.music.lavalink": ["*"],
+        "disnakeSuperUtils.music": ["*"],
+        "disnakeSuperUtils.music.lavalink": ["*"],
     },
     include_package_data=True,
     version="0.3.0",
@@ -19,12 +19,12 @@ setup(
     long_description=README,
     long_description_content_type="text/markdown",
     author="koyashie07 and adam7100",
-    url="https://github.com/discordsuperutils/discord-super-utils",
-    download_url="https://github.com/discordsuperutils/discord-super-utils/archive/refs/tags/v0.3.0.tar.gz",
+    url="https://github.com/Ariz-z/disnake-super-utils.git",
+    download_url="https://github.com/Ariz-z/disnake-super-utils/archive/refs/tags/v0.3.0.tar.gz",
     keywords=[
         "discord",
         "easy",
-        "discord.py",
+        "disnake",
         "music",
         "download",
         "links",

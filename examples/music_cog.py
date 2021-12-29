@@ -1,12 +1,12 @@
-import discordSuperUtils
+import disnakeSuperUtils
 from discord.ext import commands
-from discordSuperUtils import MusicManager
+from disnakeSuperUtils import MusicManager
 
 
 bot = commands.Bot(command_prefix="-")
 
 
-class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
+class Music(commands.Cog, disnakeSuperUtils.CogManager.Cog, name="Music"):
     def __init__(self, bot):
         self.bot = bot
         # self.client_secret = ""
@@ -20,20 +20,20 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
 
         super().__init__()
 
-    @discordSuperUtils.CogManager.event(discordSuperUtils.MusicManager)
+    @disnakeSuperUtils.CogManager.event(disnakeSuperUtils.MusicManager)
     async def on_music_error(self, ctx, error):
         raise error  # Add error handling here
 
-    @discordSuperUtils.CogManager.event(discordSuperUtils.MusicManager)
+    @disnakeSuperUtils.CogManager.event(disnakeSuperUtils.MusicManager)
     async def on_play(self, ctx, player):
         await ctx.send(f"Now playing: {player}")
 
-    @discordSuperUtils.CogManager.event(discordSuperUtils.MusicManager)
+    @disnakeSuperUtils.CogManager.event(disnakeSuperUtils.MusicManager)
     async def on_queue_end(self, ctx):
         print(f"The queue has ended in {ctx}")
         # You could wait and check activity, etc...
 
-    @discordSuperUtils.CogManager.event(discordSuperUtils.MusicManager)
+    @disnakeSuperUtils.CogManager.event(disnakeSuperUtils.MusicManager)
     async def on_inactivity_disconnect(self, ctx):
         print(f"I have left {ctx} due to inactivity..")
 
@@ -112,7 +112,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             for x in (await self.MusicManager.get_queue(ctx)).history
         ]
 
-        embeds = discordSuperUtils.generate_embeds(
+        embeds = disnakeSuperUtils.generate_embeds(
             formatted_history,
             "Song History",
             "Shows all played songs",
@@ -120,7 +120,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             string_format="{}",
         )
 
-        page_manager = discordSuperUtils.PageManager(ctx, embeds, public=True)
+        page_manager = disnakeSuperUtils.PageManager(ctx, embeds, public=True)
         await page_manager.run()
 
     @commands.command()
@@ -134,7 +134,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             for x in (await self.MusicManager.get_queue(ctx)).queue
         ]
 
-        embeds = discordSuperUtils.generate_embeds(
+        embeds = disnakeSuperUtils.generate_embeds(
             formatted_queue,
             "Queue",
             f"Now Playing: {await self.MusicManager.now_playing(ctx)}",
@@ -142,7 +142,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             string_format="{}",
         )
 
-        page_manager = discordSuperUtils.PageManager(ctx, embeds, public=True)
+        page_manager = disnakeSuperUtils.PageManager(ctx, embeds, public=True)
         await page_manager.run()
 
 

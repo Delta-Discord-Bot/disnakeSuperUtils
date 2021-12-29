@@ -1,10 +1,10 @@
 import discord
 from discord.ext import commands
 
-import discordSuperUtils
+import disnakeSuperUtils
 
 bot = commands.Bot(command_prefix="-", intents=discord.Intents.all())
-ImageManager = discordSuperUtils.ImageManager()
+ImageManager = disnakeSuperUtils.ImageManager()
 
 
 @bot.event
@@ -19,7 +19,7 @@ async def test_welcome(ctx):
     await ctx.send(
         file=await ImageManager.create_welcome_card(
             member,
-            discordSuperUtils.Backgrounds.GAMING,
+            disnakeSuperUtils.Backgrounds.GAMING,
             f"Welcome, {member} 🔥",
             "Welcome to ?,! Please read the #rules.",
             title_color=(127, 255, 0),

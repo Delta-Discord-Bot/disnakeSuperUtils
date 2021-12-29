@@ -1,9 +1,9 @@
 from discord.ext import commands
 
-import discordSuperUtils
+import disnakeSuperUtils
 
 bot = commands.Bot(command_prefix="-")
-PrefixManager = discordSuperUtils.PrefixManager(
+PrefixManager = disnakeSuperUtils.PrefixManager(
     bot, default_prefixes=("-",), mentioned=True
 )
 
@@ -19,7 +19,7 @@ async def prefix(ctx, new_prefix):
 
 @bot.event
 async def on_ready():
-    database = discordSuperUtils.DatabaseManager.connect(...)
+    database = disnakeSuperUtils.DatabaseManager.connect(...)
     await PrefixManager.connect_to_database(database, ["prefixes"])
     print("Prefix manager is ready.", bot.user)
 

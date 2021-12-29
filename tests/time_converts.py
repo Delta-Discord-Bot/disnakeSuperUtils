@@ -2,7 +2,7 @@ import asyncio
 
 from disnake.ext.commands import BadArgument
 
-import discordSuperUtils
+import disnakeSuperUtils
 from tester import Tester
 
 
@@ -56,5 +56,5 @@ async def convert_invalid2():
     return await convertor.convert(None, "100j")
 
 
-convertor = discordSuperUtils.TimeConvertor()
+convertor = disnakeSuperUtils.TimeConvertor()
 asyncio.run(start_testing())

@@ -1,14 +1,14 @@
 from discord.ext import commands
 
-import discordSuperUtils
+import disnakeSuperUtils
 
 bot = commands.Bot(command_prefix="-")
-TemplateManager = discordSuperUtils.TemplateManager(bot)
+TemplateManager = disnakeSuperUtils.TemplateManager(bot)
 
 
 @bot.event
 async def on_ready():
-    database = discordSuperUtils.DatabaseManager.connect(...)
+    database = disnakeSuperUtils.DatabaseManager.connect(...)
     await TemplateManager.connect_to_database(
         database,
         [

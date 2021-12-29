@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-import discordSuperUtils
+import disnakeSuperUtils
 
 bot = commands.Bot(command_prefix="-")
 
@@ -18,7 +18,7 @@ async def paginator(ctx):
         discord.Embed(title="Data (2/2)", description="Hello world"),
     ]
 
-    await discordSuperUtils.ButtonsPageManager(ctx, messages).run()
+    await disnakeSuperUtils.ButtonsPageManager(ctx, messages).run()
 
 
 bot.run("token")

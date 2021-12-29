@@ -1,11 +1,11 @@
 import asyncio
 
-import discordSuperUtils.Base
+import disnakeSuperUtils.Base
 from tester import Tester
 
 
 async def get_database():
-    return discordSuperUtils.DatabaseManager.connect(...)
+    return disnakeSuperUtils.DatabaseManager.connect(...)
 
 
 async def start_testing():
@@ -26,7 +26,7 @@ def remove_id(search):
 
 
 async def check_table_and_delete():
-    types = discordSuperUtils.Base.generate_column_types(
+    types = disnakeSuperUtils.Base.generate_column_types(
         ["number"], type(database.database)
     )
 

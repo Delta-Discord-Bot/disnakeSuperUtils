@@ -1,7 +1,7 @@
 """"
 If InviteTracker is used in any way that breaks disnake TOS we, (the disnakeSuperUtils team)
 are not responsible or liable in any way.
-InviteTracker by DiscordSuperUtils was not intended to violate Discord TOS in any way.
+InviteTracker by disnakeSuperUtils was not intended to violate Discord TOS in any way.
 In case we are contacted by Discord, we will remove any and all features that violate the Discord ToS.
 Please feel free to read the Discord Terms of Service https://discord.com/terms.
 """

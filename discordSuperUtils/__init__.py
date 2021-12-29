@@ -33,7 +33,7 @@ from .youtube import YoutubeClient
 from .client import DatabaseClient, ExtendedClient, ManagerClient
 from .twitch import TwitchManager, get_twitch_oauth_key
 
-__title__ = "discordSuperUtils"
+__title__ = "disnakeSuperUtils"
 __version__ = "0.3.0"
 __author__ = "Koyashie07 & Adam7100"
 __license__ = "MIT"

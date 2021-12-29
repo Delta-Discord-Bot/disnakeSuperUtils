@@ -2,30 +2,30 @@ from datetime import datetime
 
 import discord
 
-import discordSuperUtils
+import disnakeSuperUtils
 
-bot = discordSuperUtils.ManagerClient(
+bot = disnakeSuperUtils.ManagerClient(
     "token", command_prefix="-", intents=discord.Intents.all()
 )
 
-InfractionManager = discordSuperUtils.InfractionManager(bot)
-BanManager = discordSuperUtils.BanManager(bot)
-KickManager = discordSuperUtils.KickManager(bot)
-MuteManager = discordSuperUtils.MuteManager(bot)
+InfractionManager = disnakeSuperUtils.InfractionManager(bot)
+BanManager = disnakeSuperUtils.BanManager(bot)
+KickManager = disnakeSuperUtils.KickManager(bot)
+MuteManager = disnakeSuperUtils.MuteManager(bot)
 
 bot.managers = [InfractionManager, BanManager, MuteManager]
 
 InfractionManager.add_punishments(
     [
-        discordSuperUtils.Punishment(KickManager, punish_after=3),
-        discordSuperUtils.Punishment(MuteManager, punish_after=4),
-        discordSuperUtils.Punishment(BanManager, punish_after=5),
+        disnakeSuperUtils.Punishment(KickManager, punish_after=3),
+        disnakeSuperUtils.Punishment(MuteManager, punish_after=4),
+        disnakeSuperUtils.Punishment(BanManager, punish_after=5),
     ]
 )
 
 
 def make_removed_embeds(removed_infractions, member):
-    return discordSuperUtils.generate_embeds(
+    return disnakeSuperUtils.generate_embeds(
         [
             f"**Reason: **{infraction.reason}\n"
             f"**ID: **{infraction.id}\n"
@@ -39,7 +39,7 @@ def make_removed_embeds(removed_infractions, member):
 
 
 async def make_infraction_embed(member_infractions, member):
-    return discordSuperUtils.generate_embeds(
+    return disnakeSuperUtils.generate_embeds(
         [
             f"**Reason: **{await infraction.reason()}\n"
             f"**ID: **{infraction.id}\n"
@@ -69,7 +69,7 @@ async def on_punishment(ctx, member, punishment):
 
 @bot.event
 async def on_ready():
-    bot.database = discordSuperUtils.DatabaseManager.connect(...)
+    bot.database = disnakeSuperUtils.DatabaseManager.connect(...)
 
     print("Infraction manager is ready.", bot.user)
 
@@ -78,12 +78,12 @@ async def on_ready():
 async def mute(
     ctx,
     member: discord.Member,
-    time_of_mute: discordSuperUtils.TimeConvertor,
+    time_of_mute: disnakeSuperUtils.TimeConvertor,
     reason: str = "No reason specified.",
 ):
     try:
         await MuteManager.mute(member, reason, time_of_mute)
-    except discordSuperUtils.AlreadyMuted:
+    except disnakeSuperUtils.AlreadyMuted:
         await ctx.send(f"{member} is already muted.")
     else:
         await ctx.send(f"{member} has been muted. Reason: {reason}")
@@ -101,7 +101,7 @@ async def unmute(ctx, member: discord.Member):
 async def ban(
     ctx,
     member: discord.Member,
-    time_of_ban: discordSuperUtils.TimeConvertor,
+    time_of_ban: disnakeSuperUtils.TimeConvertor,
     reason: str = "No reason specified.",
 ):
     await ctx.send(f"{member} has been banned. Reason: {reason}")
@@ -120,7 +120,7 @@ async def unban(ctx, user: discord.User):
 async def infractions(ctx, member: discord.Member):
     member_infractions = await InfractionManager.get_infractions(member)
 
-    await discordSuperUtils.PageManager(
+    await disnakeSuperUtils.PageManager(
         ctx,
         await make_infraction_embed(member_infractions, member),
     ).run()
@@ -172,7 +172,7 @@ async def get(ctx, member: discord.Member, infraction_id: str):
 
 @infractions.command()
 async def get_before(
-    ctx, member: discord.Member, from_time: discordSuperUtils.TimeConvertor
+    ctx, member: discord.Member, from_time: disnakeSuperUtils.TimeConvertor
 ):
     from_timestamp = datetime.utcnow().timestamp() - from_time
 
@@ -180,7 +180,7 @@ async def get_before(
         member, from_timestamp=from_timestamp
     )
 
-    await discordSuperUtils.PageManager(
+    await disnakeSuperUtils.PageManager(
         ctx,
         await make_infraction_embed(member_infractions, member),
     ).run()
@@ -193,7 +193,7 @@ async def clear(ctx, member: discord.Member):
     for infraction in await InfractionManager.get_infractions(member):
         removed_infractions.append(await infraction.delete())
 
-    await discordSuperUtils.PageManager(
+    await disnakeSuperUtils.PageManager(
         ctx,
         make_removed_embeds(removed_infractions, member),
     ).run()
@@ -230,7 +230,7 @@ async def remove(ctx, member: discord.Member, infraction_id: str):
 
 @infractions.command()
 async def remove_before(
-    ctx, member: discord.Member, from_time: discordSuperUtils.TimeConvertor
+    ctx, member: discord.Member, from_time: disnakeSuperUtils.TimeConvertor
 ):
     from_timestamp = datetime.utcnow().timestamp() - from_time
 
@@ -242,7 +242,7 @@ async def remove_before(
     for infraction in member_infractions:
         removed_infractions.append(await infraction.delete())
 
-    await discordSuperUtils.PageManager(
+    await disnakeSuperUtils.PageManager(
         ctx,
         make_removed_embeds(removed_infractions, member),
     ).run()

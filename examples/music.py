@@ -2,8 +2,8 @@ from math import floor
 
 from discord.ext import commands
 
-import discordSuperUtils
-from discordSuperUtils import MusicManager
+import disnakeSuperUtils
+from disnakeSuperUtils import MusicManager
 import discord
 
 client_id = ""
@@ -44,7 +44,7 @@ async def on_play(ctx, player):
 
 @bot.event
 async def on_ready():
-    # database = discordSuperUtils.DatabaseManager.connect(...)
+    # database = disnakeSuperUtils.DatabaseManager.connect(...)
     # await MusicManager.connect_to_database(database, ["playlists"])
 
     print("Music manager is ready.", bot.user)
@@ -83,7 +83,7 @@ async def playlists(ctx, user: discord.User):
         for user_playlist in user_playlists
     ]
 
-    embeds = discordSuperUtils.generate_embeds(
+    embeds = disnakeSuperUtils.generate_embeds(
         formatted_playlists,
         f"Playlists of {user}",
         f"Shows {user.mention}'s playlists.",
@@ -91,7 +91,7 @@ async def playlists(ctx, user: discord.User):
         string_format="{}",
     )
 
-    page_manager = discordSuperUtils.PageManager(ctx, embeds, public=True)
+    page_manager = disnakeSuperUtils.PageManager(ctx, embeds, public=True)
     await page_manager.run()
 
 
@@ -189,7 +189,7 @@ async def lyrics(ctx, query: str = None):
                 continue
             current += split + "\n"
 
-        page_manager = discordSuperUtils.PageManager(
+        page_manager = disnakeSuperUtils.PageManager(
             ctx,
             [
                 discord.Embed(
@@ -265,7 +265,7 @@ async def complete_queue(ctx):
 
         num_of_fields = 25
 
-        embeds = discordSuperUtils.generate_embeds(
+        embeds = disnakeSuperUtils.generate_embeds(
             formatted_queue,
             "Complete Song Queue",
             "Shows the complete song queue.",
@@ -273,7 +273,7 @@ async def complete_queue(ctx):
             string_format="{}",
         )
 
-        page_manager = discordSuperUtils.PageManager(
+        page_manager = disnakeSuperUtils.PageManager(
             ctx, embeds, public=True, index=floor(ctx_queue.pos / 25)
         )
         await page_manager.run()
@@ -299,7 +299,7 @@ async def history(ctx):
             for x in ctx_queue.history
         ]
 
-        embeds = discordSuperUtils.generate_embeds(
+        embeds = disnakeSuperUtils.generate_embeds(
             formatted_history,
             "Song History",
             "Shows all played songs",
@@ -307,7 +307,7 @@ async def history(ctx):
             string_format="{}",
         )
 
-        page_manager = discordSuperUtils.PageManager(ctx, embeds, public=True)
+        page_manager = disnakeSuperUtils.PageManager(ctx, embeds, public=True)
         await page_manager.run()
 
 
@@ -324,7 +324,7 @@ async def queue(ctx):
             for x in ctx_queue.queue[ctx_queue.pos + 1 :]
         ]
 
-        embeds = discordSuperUtils.generate_embeds(
+        embeds = disnakeSuperUtils.generate_embeds(
             formatted_queue,
             "Queue",
             f"Now Playing: {await MusicManager.now_playing(ctx)}",
@@ -332,7 +332,7 @@ async def queue(ctx):
             string_format="{}",
         )
 
-        page_manager = discordSuperUtils.PageManager(ctx, embeds, public=True)
+        page_manager = disnakeSuperUtils.PageManager(ctx, embeds, public=True)
         await page_manager.run()
 
 
@@ -347,13 +347,13 @@ async def ls(ctx):
         loop = queue.loop
         loop_status = None
 
-        if loop == discordSuperUtils.Loops.LOOP:
+        if loop == disnakeSuperUtils.Loops.LOOP:
             loop_status = "Looping enabled."
 
-        elif loop == discordSuperUtils.Loops.QUEUE_LOOP:
+        elif loop == disnakeSuperUtils.Loops.QUEUE_LOOP:
             loop_status = "Queue looping enabled."
 
-        elif loop == discordSuperUtils.Loops.NO_LOOP:
+        elif loop == disnakeSuperUtils.Loops.NO_LOOP:
             loop_status = "No loop enabled."
 
         if loop_status:

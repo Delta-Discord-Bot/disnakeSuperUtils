@@ -3,10 +3,10 @@ from typing import List
 import discord
 from discord.ext import commands
 
-import discordSuperUtils
+import disnakeSuperUtils
 
 
-class MySpamDetector(discordSuperUtils.SpamDetectionGenerator):
+class MySpamDetector(disnakeSuperUtils.SpamDetectionGenerator):
     def generate(self, last_messages: List[discord.Message]) -> bool:
         # This is only an example, you can use the default generator if you want to.
         # The default generator ignores members with the 'ADMINISTRATOR' permission, and it triggers when it detects
@@ -20,10 +20,10 @@ class MySpamDetector(discordSuperUtils.SpamDetectionGenerator):
 
 
 bot = commands.Bot(command_prefix="-")
-KickManager = discordSuperUtils.KickManager(bot)
-AntiSpam = discordSuperUtils.SpamManager(bot)
+KickManager = disnakeSuperUtils.KickManager(bot)
+AntiSpam = disnakeSuperUtils.SpamManager(bot)
 # Incase you want to use the default spam detector, don't pass a spam detector.
-AntiSpam.add_punishments([discordSuperUtils.Punishment(KickManager, punish_after=3)])
+AntiSpam.add_punishments([disnakeSuperUtils.Punishment(KickManager, punish_after=3)])
 
 
 @AntiSpam.event()
