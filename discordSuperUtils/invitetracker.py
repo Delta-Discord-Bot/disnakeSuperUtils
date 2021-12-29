@@ -1,5 +1,5 @@
 """"
-If InviteTracker is used in any way that breaks Discord TOS we, (the DiscordSuperUtils team)
+If InviteTracker is used in any way that breaks disnake TOS we, (the disnakeSuperUtils team)
 are not responsible or liable in any way.
 InviteTracker by DiscordSuperUtils was not intended to violate Discord TOS in any way.
 In case we are contacted by Discord, we will remove any and all features that violate the Discord ToS.
@@ -10,12 +10,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Union, Optional
-import discord
+import disnake
 
 from .base import DatabaseChecker
 
 if TYPE_CHECKING:
-    from discord.ext import commands
+    from disnake.ext import commands
 
 
 @dataclass
@@ -25,7 +25,7 @@ class InviteAccount:
     """
 
     invite_tracker: InviteTracker
-    member: discord.Member
+    member: disnake.Member
 
     async def get_invited_users(self):
         return await self.invite_tracker.get_members_invited(
@@ -55,7 +55,7 @@ class InviteTracker(DatabaseChecker):
         self.bot.add_listener(self.__track_invite, "on_invite_create")
         self.bot.add_listener(self.__cleanup_invite, "on_invite_delete")
 
-    async def get_invite(self, member: discord.Member) -> Optional[discord.Invite]:
+    async def get_invite(self, member: disnake.Member) -> Optional[disnake.Invite]:
         for inv in await member.guild.invites():
             for invite in self.cache[member.guild.id]:
                 if invite.revoked:
@@ -68,7 +68,7 @@ class InviteTracker(DatabaseChecker):
 
     @DatabaseChecker.uses_database
     async def get_members_invited(
-        self, user: Union[discord.User, discord.Member], guild: discord.Guild
+        self, user: Union[disnake.User, disnake.Member], guild: disnake.Guild
     ):
         invited_members = await self.database.select(
             self.tables["invites"],
@@ -88,17 +88,17 @@ class InviteTracker(DatabaseChecker):
             ]
 
     async def fetch_inviter(
-        self, invite: discord.Invite
-    ) -> Union[discord.Member, discord.User]:
+        self, invite: disnake.Invite
+    ) -> Union[disnake.Member, disnake.User]:
         inviter = invite.guild.get_member(invite.inviter.id)
         return inviter if inviter else await self.bot.get_user(invite.inviter.id)
 
     @DatabaseChecker.uses_database
     async def register_invite(
         self,
-        invite: discord.Invite,
-        member: discord.Member,
-        inviter: Union[discord.Member, discord.User],
+        invite: disnake.Invite,
+        member: disnake.Member,
+        inviter: Union[disnake.Member, disnake.User],
     ) -> None:
         invited_members = await self.get_members_invited(inviter, invite.guild)
         if member.id in invited_members:
@@ -126,25 +126,25 @@ class InviteTracker(DatabaseChecker):
         for guild in self.bot.guilds:
             try:
                 self.cache[guild.id] = await guild.invites()
-            except discord.Forbidden:
+            except disnake.Forbidden:
                 pass
 
-    async def __update_guild_cache(self, guild: discord.Guild) -> None:
+    async def __update_guild_cache(self, guild: disnake.Guild) -> None:
         try:
             self.cache[guild.id] = await guild.invites()
-        except discord.Forbidden:
+        except disnake.Forbidden:
             pass
 
-    async def __track_invite(self, invite: discord.Invite) -> None:
+    async def __track_invite(self, invite: disnake.Invite) -> None:
         self.cache[invite.guild.id].append(invite)
 
-    async def __cleanup_invite(self, invite: discord.Invite) -> None:
+    async def __cleanup_invite(self, invite: disnake.Invite) -> None:
         if invite in self.cache[invite.guild.id]:
             self.cache[invite.guild.id].remove(invite)
 
-    async def __cleanup_guild_cache(self, guild: discord.Guild) -> None:
+    async def __cleanup_guild_cache(self, guild: disnake.Guild) -> None:
         self.cache.pop(guild.id)
 
     @DatabaseChecker.uses_database
-    def get_user_info(self, member: discord.Member) -> InviteAccount:
+    def get_user_info(self, member: disnake.Member) -> InviteAccount:
         return InviteAccount(self, member)

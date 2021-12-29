@@ -9,8 +9,8 @@ from .base import get_generator_response, EventManager, CacheBased
 from .punishments import get_relevant_punishment
 
 if TYPE_CHECKING:
-    from discord.ext import commands
-    import discord
+    from disnake.ext import commands
+    import disnake
     from .punishments import Punishment
 
 __all__ = (
@@ -29,13 +29,13 @@ class MessageResponseGenerator(ABC):
     __slots__ = ()
 
     @abstractmethod
-    def generate(self, message: discord.Message) -> Union[bool, Any]:
+    def generate(self, message: disnake.Message) -> Union[bool, Any]:
         """
         This function is an abstract method.
         The generate function of the generator.
 
         :param message: The message to filter.
-        :type message: discord.Message
+        :type message: disnake.Message
         :return: A boolean representing if the message contains inappropriate content.
         :rtype: Union[bool, Any]
         """
@@ -52,7 +52,7 @@ class DefaultMessageResponseGenerator(MessageResponseGenerator):
         r"?:com|gg|io|li|me|net|org)(?:/(?:invite))?/([a-z0-9-.]+)"
     )
 
-    def generate(self, message: discord.Message) -> Union[bool, Any]:
+    def generate(self, message: disnake.Message) -> Union[bool, Any]:
         if message.author.guild_permissions.administrator:
             return False
 
@@ -63,7 +63,7 @@ class DefaultMessageResponseGenerator(MessageResponseGenerator):
 
 class MessageFilter(EventManager, CacheBased):
     """
-    Represents a discordSuperUtils message filter that filters messages and finds inappropriate content.
+    Represents a disnakeSuperUtils message filter that filters messages and finds inappropriate content.
     """
 
     __slots__ = ("bot", "generator", "punishments")
@@ -96,10 +96,10 @@ class MessageFilter(EventManager, CacheBased):
         Handled events: on_message, on_message_edit
 
         :param message: The on_message message passed by the event.
-        :type message: discord.Message
+        :type message: disnake.Message
         :param edited_message: The edited messages passed by the on_message_edit event, this function will use this
         incase it is not None.
-        :type edited_message: discord.Message
+        :type edited_message: disnake.Message
         :return:
         """
 

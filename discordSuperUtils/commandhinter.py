@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from difflib import SequenceMatcher
 from typing import List, Union, Optional
 
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 from .base import get_generator_response
 
@@ -20,31 +20,31 @@ class CommandResponseGenerator(ABC):
     @abstractmethod
     def generate(
         self, invalid_command: str, suggestions: List[str]
-    ) -> Optional[Union[str, discord.Embed]]:
+    ) -> Optional[Union[str, disnake.Embed]]:
         """
         The generate method of the generator.
 
         :param str invalid_command: The invalid command.
         :param List[str] suggestions: The list of suggestions.
         :return: The generator response.
-        :rtype: Optional[Union[str, discord.Embed]]
+        :rtype: Optional[Union[str, disnake.Embed]]
         """
 
 
 class DefaultResponseGenerator(CommandResponseGenerator):
     __slots__ = ()
 
-    def generate(self, invalid_command: str, suggestions: List[str]) -> discord.Embed:
+    def generate(self, invalid_command: str, suggestions: List[str]) -> disnake.Embed:
         """
         The default generate method of the generator.
 
         :param str invalid_command: The invalid command.
         :param List[str] suggestions: The list of suggestions.
         :return: The generator response.
-        :rtype: discord.Embed
+        :rtype: disnake.Embed
         """
 
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Invalid command!",
             description=f"**`{invalid_command}`** is invalid. Did you mean:",
             color=0x00FF00,
@@ -122,11 +122,11 @@ class CommandHinter:
             if not generated_message:
                 return
 
-            if isinstance(generated_message, discord.Embed):
+            if isinstance(generated_message, disnake.Embed):
                 await ctx.send(embed=generated_message)
             elif isinstance(generated_message, str):
                 await ctx.send(generated_message)
             else:
                 raise TypeError(
-                    "The generated message must be of type 'discord.Embed' or 'str'."
+                    "The generated message must be of type 'disnake.Embed' or 'str'."
                 )

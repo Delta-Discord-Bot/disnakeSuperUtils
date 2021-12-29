@@ -9,8 +9,8 @@ import aiohttp
 from .base import DatabaseChecker
 
 if TYPE_CHECKING:
-    import discord
-    from discord.ext import commands
+    import disnake
+    from disnake.ext import commands
 
 __all__ = ("TwitchManager", "TwitchAuthorizationError", "get_twitch_oauth_key")
 
@@ -133,13 +133,13 @@ class TwitchManager(DatabaseChecker):
 
         raise TwitchAuthorizationError(r_json["message"])
 
-    async def add_channel(self, guild: discord.Guild, channel: str) -> None:
+    async def add_channel(self, guild: disnake.Guild, channel: str) -> None:
         """
         |coro|
 
         Adds a channel to the guild list.
 
-        :param discord.Guild guild: The guild.
+        :param disnake.Guild guild: The guild.
         :param str channel: The channel.
         :return: None
         :rtype: None
@@ -151,13 +151,13 @@ class TwitchManager(DatabaseChecker):
             {"guild": guild.id, "channel": channel},
         )
 
-    async def remove_channel(self, guild: discord.Guild, channel: str) -> None:
+    async def remove_channel(self, guild: disnake.Guild, channel: str) -> None:
         """
         |coro|
 
         Removes a channel from the guild list.
 
-        :param discord.Guild guild: The guild.
+        :param disnake.Guild guild: The guild.
         :param str channel: The channel.
         :return: None
         :rtype: None
@@ -167,13 +167,13 @@ class TwitchManager(DatabaseChecker):
             self.tables["channels"], {"guild": guild.id, "channel": channel}
         )
 
-    async def get_guild_channels(self, guild: discord.Guild) -> List[str]:
+    async def get_guild_channels(self, guild: disnake.Guild) -> List[str]:
         """
         |coro|
 
         Returns the channels of the guild.
 
-        :param discord.Guild guild: The guild.
+        :param disnake.Guild guild: The guild.
         :return: The channels.
         :rtype: List[str]
         """

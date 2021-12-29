@@ -5,9 +5,9 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, tzinfo
 from typing import Dict, List, Optional, Any
 
-import discord
+import disnake
 import pytz
-from discord.ext import commands
+from disnake.ext import commands
 
 from .base import DatabaseChecker
 
@@ -21,7 +21,7 @@ class PartialBirthdayMember:
     Represents a partial birthday member.
     """
 
-    member: discord.Member
+    member: disnake.Member
     birthday_date: datetime
     timezone: tzinfo
 
@@ -33,7 +33,7 @@ class BirthdayMember:
     """
 
     birthday_manager: BirthdayManager
-    member: discord.Member
+    member: disnake.Member
 
     def __post_init__(self):
         self.table = self.birthday_manager.tables["birthdays"]
@@ -188,14 +188,14 @@ class BirthdayManager(DatabaseChecker):
 
     @DatabaseChecker.uses_database
     async def create_birthday(
-        self, member: discord.Member, member_birthday: float, timezone: str = "UTC"
+        self, member: disnake.Member, member_birthday: float, timezone: str = "UTC"
     ) -> None:
         """
         |coro|
 
         Makes a birthday for the member.
 
-        :param discord.Member member: The member.
+        :param disnake.Member member: The member.
         :param float member_birthday: The member birthday timestamp in UTC.
         :param str timezone: The timezone.
         :return: None
@@ -214,13 +214,13 @@ class BirthdayManager(DatabaseChecker):
         )
 
     @DatabaseChecker.uses_database
-    async def get_birthday(self, member: discord.Member) -> Optional[BirthdayMember]:
+    async def get_birthday(self, member: disnake.Member) -> Optional[BirthdayMember]:
         """
         |coro|
 
         Returns the BirthdayMember object of the member.
 
-        :param discord.Member member: The member.
+        :param disnake.Member member: The member.
         :return: The BirthdayMember object if applicable.
         :rtype: Optional[BirthdayMember]
         """
@@ -238,13 +238,13 @@ class BirthdayManager(DatabaseChecker):
         return None
 
     @DatabaseChecker.uses_database
-    async def get_upcoming(self, guild: discord.Guild) -> List[BirthdayMember]:
+    async def get_upcoming(self, guild: disnake.Guild) -> List[BirthdayMember]:
         """
         |coro|
 
         Returns the upcoming birthdays in the guild.
 
-        :param discord.Guild guild: The guild.
+        :param disnake.Guild guild: The guild.
         :return: The birthdays, sorted by their nearest birthday date.
         :rtype: List[BirthdayMember]
         """

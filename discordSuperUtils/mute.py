@@ -4,14 +4,14 @@ import asyncio
 from datetime import datetime
 from typing import TYPE_CHECKING, Union, Optional, List, Any, Dict
 
-import discord
-import discord.utils
+import disnake
+import disnake.utils
 
 from .base import DatabaseChecker
 from .punishments import Punisher
 
 if TYPE_CHECKING:
-    from discord.ext import commands
+    from disnake.ext import commands
     from .punishments import Punishment
 
 
@@ -68,7 +68,7 @@ class MuteManager(DatabaseChecker, Punisher):
             if x["timestamp_of_unmute"] <= datetime.utcnow().timestamp()
         ]
 
-    async def on_member_join(self, member: discord.Member) -> None:
+    async def on_member_join(self, member: disnake.Member) -> None:
         """
         |coro|
 
@@ -76,7 +76,7 @@ class MuteManager(DatabaseChecker, Punisher):
         Used so the member cant leave the guild, join back and be unmuted.
 
         :param member: The member that joined.
-        :type member: discord.Member
+        :type member: disnake.Member
         :return: None
         :rtype: None
         """
@@ -95,7 +95,7 @@ class MuteManager(DatabaseChecker, Punisher):
         ]
 
         if any([muted_member["member"] == member.id for muted_member in muted_members]):
-            muted_role = discord.utils.get(
+            muted_role = disnake.utils.get(
                 member.guild.roles, name=self.muted_role_name
             )
 
@@ -129,18 +129,18 @@ class MuteManager(DatabaseChecker, Punisher):
             await asyncio.sleep(300)
 
     async def punish(
-        self, ctx: commands.Context, member: discord.Member, punishment: Punishment
+        self, ctx: commands.Context, member: disnake.Member, punishment: Punishment
     ) -> None:
         try:
             await self.mute(member)
-        except discord.errors.Forbidden as e:
+        except disnake.errors.Forbidden as e:
             raise e
         else:
             await self.call_event("on_punishment", ctx, member, punishment)
 
     @staticmethod
     async def ensure_permissions(
-        guild: discord.Guild, muted_role: discord.Role
+        guild: disnake.Guild, muted_role: disnake.Role
     ) -> None:
         """
         |coro|
@@ -149,9 +149,9 @@ class MuteManager(DatabaseChecker, Punisher):
         send messages or speak in that channel.
 
         :param guild: The guild to get the channels from.
-        :type guild: discord.Guild
+        :type guild: disnake.Guild
         :param muted_role: The muted role.
-        :type muted_role: discord.Role
+        :type muted_role: disnake.Role
         :return: None
         """
 
@@ -174,7 +174,7 @@ class MuteManager(DatabaseChecker, Punisher):
         )
 
     async def __handle_unmute(
-        self, time_of_mute: Union[int, float], member: discord.Member, reason: str
+        self, time_of_mute: Union[int, float], member: disnake.Member, reason: str
     ) -> None:
         """
         |coro|
@@ -184,7 +184,7 @@ class MuteManager(DatabaseChecker, Punisher):
         :param time_of_mute: The time until the member's unmute timestamp.
         :type time_of_mute: Union[int, float]
         :param member: The member to unmute.
-        :type member: discord.Member
+        :type member: disnake.Member
         :param reason: The reason of the mute.
         :type reason: str
         :return: None
@@ -198,7 +198,7 @@ class MuteManager(DatabaseChecker, Punisher):
     @DatabaseChecker.uses_database
     async def mute(
         self,
-        member: discord.Member,
+        member: disnake.Member,
         reason: str = "No reason provided.",
         time_of_mute: Union[int, float] = 0,
     ) -> None:
@@ -209,7 +209,7 @@ class MuteManager(DatabaseChecker, Punisher):
 
         :raises: AlreadyMuted: The member is already muted.
         :param member: The member to mute.
-        :type member: discord.Member
+        :type member: disnake.Member
         :param reason: The reason of the mute.
         :type reason: str
         :param time_of_mute: The time of mute.
@@ -218,11 +218,11 @@ class MuteManager(DatabaseChecker, Punisher):
         :rtype: None
         """
 
-        muted_role = discord.utils.get(member.guild.roles, name=self.muted_role_name)
+        muted_role = disnake.utils.get(member.guild.roles, name=self.muted_role_name)
         if not muted_role:
             muted_role = await member.guild.create_role(
                 name="Muted",
-                permissions=discord.Permissions(send_messages=False, speak=False),
+                permissions=disnake.Permissions(send_messages=False, speak=False),
             )
 
         if muted_role in member.roles:
@@ -249,14 +249,14 @@ class MuteManager(DatabaseChecker, Punisher):
         self.bot.loop.create_task(self.__handle_unmute(time_of_mute, member, reason))
 
     @DatabaseChecker.uses_database
-    async def unmute(self, member: discord.Member) -> Optional[bool]:
+    async def unmute(self, member: disnake.Member) -> Optional[bool]:
         """
         |coro|
 
         Unmutes a member.
 
         :param member: The member to unmute.
-        :type member: discord.Member
+        :type member: disnake.Member
         :rtype: Optional[bool]
         :return: A bool indicating if the unmute was successful
         """
@@ -264,7 +264,7 @@ class MuteManager(DatabaseChecker, Punisher):
         await self.database.delete(
             self.tables["mutes"], {"guild": member.guild.id, "member": member.id}
         )
-        muted_role = discord.utils.get(member.guild.roles, name=self.muted_role_name)
+        muted_role = disnake.utils.get(member.guild.roles, name=self.muted_role_name)
         if not muted_role:
             return
 

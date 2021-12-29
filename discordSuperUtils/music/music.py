@@ -7,7 +7,7 @@ import uuid
 from typing import Optional, TYPE_CHECKING, List, Tuple, Dict, Callable, Union
 
 import aiohttp
-import discord
+import disnake
 
 from .constants import *
 from .enums import Loops, ManagerType
@@ -34,7 +34,7 @@ from ..spotify import SpotifyClient
 from ..youtube import YoutubeClient
 
 if TYPE_CHECKING:
-    from discord.ext import commands
+    from disnake.ext import commands
 
 __all__ = ("MusicManager",)
 
@@ -109,22 +109,22 @@ class MusicManager(DatabaseChecker):
         :raises: RuntimeError: Could not find opus on the machine.
         """
 
-        if not discord.opus.is_loaded():
+        if not disnake.opus.is_loaded():
             try:
-                discord.opus._load_default()
+                disnake.opus._load_default()
             except OSError:
                 raise RuntimeError("Could not find opus on the machine.")
 
     async def cleanup(
-        self, voice_client: Optional[discord.VoiceClient], guild: discord.Guild
+        self, voice_client: Optional[disnake.VoiceClient], guild: disnake.Guild
     ):
         """
         |coro|
 
         Cleans up after a guild.
 
-        :param discord.Guild guild: The guild to cleanup.
-        :param Optional[discord.VoiceClient] voice_client: The voice client.
+        :param disnake.Guild guild: The guild to cleanup.
+        :param Optional[disnake.VoiceClient] voice_client: The voice client.
         :return: None
         :rtype: None
         """
@@ -143,7 +143,7 @@ class MusicManager(DatabaseChecker):
 
     @DatabaseChecker.uses_database
     async def add_playlist(
-        self, user: discord.User, url: str
+        self, user: disnake.User, url: str
     ) -> Optional[UserPlaylist]:
         """
         |coro|
@@ -151,7 +151,7 @@ class MusicManager(DatabaseChecker):
         Adds a playlist to the user's account.
         Saves the playlist in the database.
 
-        :param discord.User user: The owner of the playlist.
+        :param disnake.User user: The owner of the playlist.
         :param str url: The playlist URL.
         :return: None
         :rtype: None
@@ -173,7 +173,7 @@ class MusicManager(DatabaseChecker):
 
     @DatabaseChecker.uses_database
     async def get_playlist(
-        self, user: discord.User, playlist_id: str, partial: bool = False
+        self, user: disnake.User, playlist_id: str, partial: bool = False
     ) -> Optional[UserPlaylist]:
         """
         |coro|
@@ -182,7 +182,7 @@ class MusicManager(DatabaseChecker):
 
         :param str playlist_id: The playlist id.
         :param bool partial: Indicating if the function should not fetch the playlist data.
-        :param discord.User user: The user.
+        :param disnake.User user: The user.
         :return: The user playlist.
         :rtype: Optional[UserPlaylist]
         """
@@ -203,14 +203,14 @@ class MusicManager(DatabaseChecker):
 
     @DatabaseChecker.uses_database
     async def get_user_playlists(
-        self, user: discord.User, partial: bool = False
+        self, user: disnake.User, partial: bool = False
     ) -> List[UserPlaylist]:
         """
         |coro|
 
         Returns the user's playlists.
 
-        :param discord.User user: The user.
+        :param disnake.User user: The user.
         :param bool partial: Indicating if the function should not fetch the playlist data.
         :return: The list of user playlists.
         :rtype: List[UserPlaylist]
@@ -359,14 +359,14 @@ class MusicManager(DatabaseChecker):
                 await self.call_event("on_queue_end", ctx)
 
             player.source = (
-                discord.PCMVolumeTransformer(
-                    discord.FFmpegPCMAudio(
+                disnake.PCMVolumeTransformer(
+                    disnake.FFmpegPCMAudio(
                         player.stream_url, **FFMPEG_OPTIONS, executable=self.executable
                     ),
                     queue.volume,
                 )
                 if not self.opus_players
-                else discord.FFmpegOpusAudio(
+                else disnake.FFmpegOpusAudio(
                     player.stream_url, **FFMPEG_OPTIONS, executable=self.executable
                 )
             )
@@ -428,7 +428,7 @@ class MusicManager(DatabaseChecker):
         )
 
     async def create_playlist_players(
-        self, playlist: Playlist, requester: discord.Member
+        self, playlist: Playlist, requester: disnake.Member
     ) -> List[Player]:
         """
         |coro|
@@ -436,7 +436,7 @@ class MusicManager(DatabaseChecker):
         Returns a list of players from the playlist.
 
         :param Playlist playlist: The playlist.
-        :param discord.Member requester: The requester.
+        :param disnake.Member requester: The requester.
         :return: The list of created players.
         :rtype: List[Player]
         """
@@ -471,7 +471,7 @@ class MusicManager(DatabaseChecker):
             return None
 
     async def create_player(
-        self, query: str, requester: discord.Member
+        self, query: str, requester: disnake.Member
     ) -> List[Player]:
         """
         |coro|
@@ -480,7 +480,7 @@ class MusicManager(DatabaseChecker):
         This function supports Spotify and all YTDL supported links.
 
         :param requester: The requester.
-        :type requester: discord.Member
+        :type requester: disnake.Member
         :param query: The query.
         :type query: str
         :return: The list of players.
@@ -806,7 +806,7 @@ class MusicManager(DatabaseChecker):
         self.queue[ctx.guild.id].volume = volume / 100
         return ctx.voice_client.source.volume * 100
 
-    async def join(self, ctx: commands.Context) -> Optional[discord.VoiceChannel]:
+    async def join(self, ctx: commands.Context) -> Optional[disnake.VoiceChannel]:
         """
         |coro|
 
@@ -816,7 +816,7 @@ class MusicManager(DatabaseChecker):
         :param ctx: The context.
         :type ctx: commands.Context
         :return: The voice channel it joined.
-        :rtype: Optional[discord.VoiceChannel]
+        :rtype: Optional[disnake.VoiceChannel]
         """
 
         if ctx.voice_client and ctx.voice_client.is_connected():
@@ -839,12 +839,12 @@ class MusicManager(DatabaseChecker):
         await channel.connect(
             cls=LavalinkPlayer
             if self.type == ManagerType.LAVALINK
-            else discord.VoiceClient
+            else disnake.VoiceClient
         )
         return channel
 
     @ensure_connection()
-    async def leave(self, ctx: commands.Context) -> Optional[discord.VoiceChannel]:
+    async def leave(self, ctx: commands.Context) -> Optional[disnake.VoiceChannel]:
         """
         |coro|
 
@@ -853,7 +853,7 @@ class MusicManager(DatabaseChecker):
         :param ctx: The context.
         :type ctx: commands.Context
         :return: The voice channel it left.
-        :rtype: Optional[discord.VoiceChannel]
+        :rtype: Optional[disnake.VoiceChannel]
         """
 
         if ctx.guild.id in self.queue:

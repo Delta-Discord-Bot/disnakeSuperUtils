@@ -6,8 +6,8 @@ from datetime import timedelta
 from typing import Optional, List, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import discord
-    from discord.ext import commands
+    import disnake
+    from disnake.ext import commands
 
 
 @dataclass
@@ -48,7 +48,7 @@ def get_relevant_punishment(
 class Punisher(ABC):
     @abstractmethod
     async def punish(
-        self, ctx: commands.Context, member: discord.Member, punishment: Punishment
+        self, ctx: commands.Context, member: disnake.Member, punishment: Punishment
     ) -> None:
         """
         |coro|
@@ -58,7 +58,7 @@ class Punisher(ABC):
         :param ctx: The context of the punishments.
         :type ctx: commands.Context
         :param member: The member to punish.
-        :type member: discord.Member
+        :type member: disnake.Member
         :param punishment: The punishment to punish the member with.
         :type punishment: Punishment
         :rtype: None

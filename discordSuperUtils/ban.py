@@ -4,21 +4,21 @@ import asyncio
 from datetime import datetime
 from typing import TYPE_CHECKING, Union, Optional, List, Dict, Any
 
-import discord
+import disnake
 
 from .base import DatabaseChecker
 from .punishments import Punisher
 
 if TYPE_CHECKING:
     from .punishments import Punishment
-    from discord.ext import commands
+    from disnake.ext import commands
 
 
 __all__ = ("UnbanFailure", "BanManager")
 
 
 class UnbanFailure(Exception):
-    """Raises an exception when the user tries to unban a discord.User without passing the guild."""
+    """Raises an exception when the user tries to unban a disnake.User without passing the guild."""
 
 
 class BanManager(DatabaseChecker, Punisher):
@@ -91,7 +91,7 @@ class BanManager(DatabaseChecker, Punisher):
             await asyncio.sleep(300)
 
     async def punish(
-        self, ctx: commands.Context, member: discord.Member, punishment: Punishment
+        self, ctx: commands.Context, member: disnake.Member, punishment: Punishment
     ) -> None:
         try:
             self.bot.loop.create_task(
@@ -101,26 +101,26 @@ class BanManager(DatabaseChecker, Punisher):
                     punishment.punishment_time.total_seconds(),
                 )
             )
-        except discord.errors.Forbidden as e:
+        except disnake.errors.Forbidden as e:
             raise e
         else:
             await self.call_event("on_punishment", ctx, member, punishment)
 
     @staticmethod
     async def get_ban(
-        member: Union[discord.Member, discord.User], guild: discord.Guild
-    ) -> Optional[discord.User]:
+        member: Union[disnake.Member, disnake.User], guild: disnake.Guild
+    ) -> Optional[disnake.User]:
         """
         |coro|
 
         This function returns the user object of the member if he is banned from the guild.
 
         :param member: The banned member.
-        :type member: discord.Member
+        :type member: disnake.Member
         :param guild: The guild.
-        :type guild: discord.Guild
+        :type guild: disnake.Guild
         :return: The user object if found.
-        :rtype: Optional[discord.User]
+        :rtype: Optional[disnake.User]
         """
 
         banned = await guild.bans()
@@ -130,22 +130,22 @@ class BanManager(DatabaseChecker, Punisher):
 
     @DatabaseChecker.uses_database
     async def unban(
-        self, member: Union[discord.Member, discord.User], guild: discord.Guild = None
+        self, member: Union[disnake.Member, disnake.User], guild: disnake.Guild = None
     ) -> bool:
         """
         |coro|
 
         Unbans the member from the guild.
 
-        :param Union[discord.Member, discord.User] member: The member or user to unban.
-        :param discord.Guild guild: The guild to unban the member from.
+        :param Union[disnake.Member, disnake.User] member: The member or user to unban.
+        :param disnake.Guild guild: The guild to unban the member from.
         :return: A bool representing if the unban was successful.
         :rtype: bool
-        :raises: UnbanFailure: Cannot unban a discord.User without a guild.
+        :raises: UnbanFailure: Cannot unban a disnake.User without a guild.
         """
 
-        if isinstance(member, discord.User) and not guild:
-            raise UnbanFailure("Cannot unban a discord.User without a guild.")
+        if isinstance(member, disnake.User) and not guild:
+            raise UnbanFailure("Cannot unban a disnake.User without a guild.")
 
         guild = guild if guild is not None else member.guild
         await self.database.delete(
@@ -157,7 +157,7 @@ class BanManager(DatabaseChecker, Punisher):
             return True
 
     async def __handle_unban(
-        self, time_of_ban: Union[int, float], member: discord.Member, reason: str
+        self, time_of_ban: Union[int, float], member: disnake.Member, reason: str
     ) -> None:
         """
         |coro|
@@ -165,7 +165,7 @@ class BanManager(DatabaseChecker, Punisher):
         A function that handles the member's unban that runs separately from the ban method so it wont be blocked.
 
         :param Union[int, float] time_of_ban: The time until the member's unban timestamp.
-        :param discord.Member member: The member to unban.
+        :param disnake.Member member: The member to unban.
         :param str reason: The reason of the mute.
         :return: None
         :rtype: None
@@ -179,7 +179,7 @@ class BanManager(DatabaseChecker, Punisher):
     @DatabaseChecker.uses_database
     async def ban(
         self,
-        member: discord.Member,
+        member: disnake.Member,
         reason: str = "No reason provided.",
         time_of_ban: Union[int, float] = 0,
     ) -> None:
@@ -189,7 +189,7 @@ class BanManager(DatabaseChecker, Punisher):
         Bans the member from the guild.
 
         :param member: The member to ban.
-        :type member: discord.Member
+        :type member: disnake.Member
         :param reason: The reason of the ban.
         :type reason: str
         :param time_of_ban: The time of ban.

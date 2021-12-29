@@ -40,7 +40,7 @@ setup(
         "database manager",
     ],
     install_requires=[
-        "discord.py",
+        "disnake",
         "Pillow",
         "requests",
         "spotipy",

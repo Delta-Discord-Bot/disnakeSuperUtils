@@ -6,7 +6,7 @@ import os
 import time
 from typing import Optional, TYPE_CHECKING, List, Tuple
 
-from discord.ext import commands
+from disnake.ext import commands
 
 if TYPE_CHECKING:
     from .base import DatabaseChecker

@@ -5,13 +5,13 @@ from datetime import timedelta
 from difflib import SequenceMatcher
 from typing import TYPE_CHECKING, List, Union, Any, Iterable
 
-import discord
+import disnake
 
 from .base import EventManager, get_generator_response, CacheBased
 from .punishments import get_relevant_punishment
 
 if TYPE_CHECKING:
-    from discord.ext import commands
+    from disnake.ext import commands
     from .punishments import Punishment
 
 __all__ = ("SpamManager", "SpamDetectionGenerator", "DefaultSpamDetectionGenerator")
@@ -25,13 +25,13 @@ class SpamDetectionGenerator(ABC):
     __slots__ = ()
 
     @abstractmethod
-    def generate(self, last_messages: List[discord.Message]) -> Union[bool, Any]:
+    def generate(self, last_messages: List[disnake.Message]) -> Union[bool, Any]:
         """
         This function is an abstract method.
         The generate function of the generator.
 
         :param last_messages: The last messages sent (5 is max).
-        :type last_messages: List[discord.Message]
+        :type last_messages: List[disnake.Message]
         :return: A boolean representing if the message is spam.
         :rtype: Union[bool, Any]
         """
@@ -40,7 +40,7 @@ class SpamDetectionGenerator(ABC):
 
 
 class DefaultSpamDetectionGenerator(SpamDetectionGenerator):
-    def generate(self, last_messages: List[discord.Message]) -> Union[bool, Any]:
+    def generate(self, last_messages: List[disnake.Message]) -> Union[bool, Any]:
         member = last_messages[0].author
         if member.guild_permissions.administrator:
             return False

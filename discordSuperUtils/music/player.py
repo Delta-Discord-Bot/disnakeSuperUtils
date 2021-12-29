@@ -5,7 +5,7 @@ from typing import Optional, TYPE_CHECKING, List, Iterable
 
 if TYPE_CHECKING:
     from ..youtube import YoutubeClient
-    import discord
+    import disnake
 
 
 __all__ = ("Player",)
@@ -33,7 +33,7 @@ class Player:
 
     def __init__(
         self,
-        requester: Optional[discord.Member],
+        requester: Optional[disnake.Member],
         used_query: str,
         title: str,
         stream_url: str,
@@ -94,7 +94,7 @@ class Player:
         youtube: YoutubeClient,
         used_query: str,
         songs: Iterable[str],
-        requester: Optional[discord.Member],
+        requester: Optional[disnake.Member],
     ) -> List[Player]:
         """
         |coro|
@@ -104,7 +104,7 @@ class Player:
         :param str used_query: The used query.
         :param YoutubeClient youtube: The youtube client.
         :param requester: The requester.
-        :type requester: Optional[discord.Member]
+        :type requester: Optional[disnake.Member]
         :param songs: The queries.
         :type songs: Iterable[str]
         :return: The list of created players.
@@ -201,7 +201,7 @@ class Player:
 
     @classmethod
     def create_player(
-        cls, requester: discord.Member, query: str, player: dict
+        cls, requester: disnake.Member, query: str, player: dict
     ) -> Player:
         return cls(
             requester,
@@ -218,7 +218,7 @@ class Player:
         cls,
         youtube: YoutubeClient,
         query: str,
-        requester: Optional[discord.Member],
+        requester: Optional[disnake.Member],
         playlist: bool = True,
     ) -> List[Player]:
         """
@@ -227,7 +227,7 @@ class Player:
         Returns a list of players from the query.
 
         :param YoutubeClient youtube: The youtube client.
-        :param Optional[discord.Member] requester: The song requester.
+        :param Optional[disnake.Member] requester: The song requester.
         :param query: The query.
         :type query: str
         :param playlist: A bool indicating if the function should fetch playlists or get the first video.

@@ -11,7 +11,7 @@ from typing import Optional, Tuple, Union, TYPE_CHECKING
 import PIL
 import PIL.ImageShow
 import aiohttp
-import discord
+import disnake
 from PIL import Image, ImageDraw, ImageFont
 from PIL.ImageFont import FreeTypeFont
 
@@ -142,7 +142,7 @@ class ImageManager:
     async def draw_profile_picture(
         self,
         card: Image.Image,
-        member: discord.Member,
+        member: disnake.Member,
         location: Tuple[int, int],
         size: int = 180,
         outline_thickness: int = 5,
@@ -155,7 +155,7 @@ class ImageManager:
         Pastes the profile picture on the card.
 
         :param Image.Image card: The card.
-        :param discord.Member member: The member to get the profile picture from.
+        :param disnake.Member member: The member to get the profile picture from.
         :param Tuple[int, int] location: The center of the picture.
         :param int size: The size of the pasted profile picture.
         :param int outline_thickness: The outline thickness.
@@ -206,7 +206,7 @@ class ImageManager:
 
     async def create_welcome_card(
         self,
-        member: discord.Member,
+        member: disnake.Member,
         background: Union[Backgrounds, str],
         title: str,
         description: str,
@@ -215,13 +215,13 @@ class ImageManager:
         font_path: str = None,
         outline: int = 5,
         transparency: int = 0,
-    ) -> discord.File:
+    ) -> disnake.File:
         """
         |coro|
 
-        Creates a welcome image for the member and returns it as a discord.File.
+        Creates a welcome image for the member and returns it as a disnake.File.
 
-        :param discord.Member member: The joined member.
+        :param disnake.Member member: The joined member.
         :param Union[Backgrounds, str] background: The background of the image, can be a Backgrounds enum or a URL.
         :param str title: The title.
         :param str description: The description.
@@ -230,8 +230,8 @@ class ImageManager:
         :param str font_path: The font path, uses the default font if not passed.
         :param int outline: The outline thickness.
         :param int transparency: The transparency of the background made.
-        :return: The discord file.
-        :rtype: discord.File
+        :return: The disnake file.
+        :rtype: disnake.File
         """
 
         result_bytes = BytesIO()
@@ -261,11 +261,11 @@ class ImageManager:
 
         final_card.save(result_bytes, format="PNG")
         result_bytes.seek(0)
-        return discord.File(result_bytes, filename="welcome_card.png")
+        return disnake.File(result_bytes, filename="welcome_card.png")
 
     async def create_leveling_profile(
         self,
-        member: discord.Member,
+        member: disnake.Member,
         member_account: LevelingAccount,
         background: Union[Backgrounds, str],
         rank: int,
@@ -279,13 +279,13 @@ class ImageManager:
         profile_outline_color: Tuple[int, int, int] = DEFAULT_COLOR,
         font_path: str = None,
         outline: int = 5,
-    ) -> discord.File:
+    ) -> disnake.File:
         """
         |coro|
 
-        Creates a leveling image, converted to a discord.File.
+        Creates a leveling image, converted to a disnake.File.
 
-        :param discord.Member member: The member.
+        :param disnake.Member member: The member.
         :param LevelingAccount member_account: The leveling account of the member.
         :param Union[Backgrounds, str] background: The background of the image.
         :param int rank: The guild rank of the member.
@@ -299,8 +299,8 @@ class ImageManager:
         :param Tuple[int, int, int] profile_outline_color: The color of the member's outliine.
         :param str font_path: The font path, uses the default font if not passed.
         :param int outline: The outline thickness.
-        :return: The image, converted to a discord.File.
-        :rtype: discord.File
+        :return: The image, converted to a disnake.File.
+        :rtype: disnake.File
         """
 
         result_bytes = BytesIO()
@@ -360,20 +360,20 @@ class ImageManager:
 
         final_card.save(result_bytes, format="PNG")
         result_bytes.seek(0)
-        return discord.File(result_bytes, filename="rankcard.png")
+        return disnake.File(result_bytes, filename="rankcard.png")
 
     async def create_spotify_card(
-        self, spotify_activity: discord.Spotify, font_path: str = None
-    ) -> discord.File:
+        self, spotify_activity: disnake.Spotify, font_path: str = None
+    ) -> disnake.File:
         """
         |coro|
 
-        Creates a Spotify activity image for the Spotify song and returns it as a discord.File.
+        Creates a Spotify activity image for the Spotify song and returns it as a disnake.File.
 
-        :param discord.Spotify spotify_activity: The Spotify activity.
+        :param disnake.Spotify spotify_activity: The Spotify activity.
         :param str font_path: The font path, uses the default font if not passed.
-        :return: The discord file.
-        :rtype: discord.File
+        :return: The disnake file.
+        :rtype: disnake.File
         """
 
         result_bytes = BytesIO()
@@ -485,7 +485,7 @@ class ImageManager:
 
         background_image_color.save(result_bytes, format="PNG")
         result_bytes.seek(0)
-        return discord.File(result_bytes, filename="spotify.png")
+        return disnake.File(result_bytes, filename="spotify.png")
 
 
 class Backgrounds(Enum):

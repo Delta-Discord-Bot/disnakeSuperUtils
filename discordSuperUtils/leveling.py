@@ -8,7 +8,7 @@ from typing import Iterable, TYPE_CHECKING, List
 from .base import DatabaseChecker
 
 if TYPE_CHECKING:
-    import discord
+    import disnake
 
 
 @dataclass
@@ -18,7 +18,7 @@ class LevelingAccount:
     """
 
     leveling_manager: LevelingManager
-    member: discord.Member
+    member: disnake.Member
 
     def __post_init__(self):
         self.table = self.leveling_manager.tables["xp"]
@@ -114,14 +114,14 @@ class LevelingManager(DatabaseChecker):
         self.add_event(self.on_database_connect)
 
     @DatabaseChecker.uses_database
-    async def set_interval(self, guild: discord.Guild, interval: int = None) -> None:
+    async def set_interval(self, guild: disnake.Guild, interval: int = None) -> None:
         """
         Set the role interval of a guild.
 
         :param interval: The interval to set.
         :type interval: int
         :param guild: The guild to set the role interval in.
-        :type guild: discord.Guild
+        :type guild: disnake.Guild
         :return:
         :rtype: None
         """
@@ -138,12 +138,12 @@ class LevelingManager(DatabaseChecker):
         )
 
     @DatabaseChecker.uses_database
-    async def get_roles(self, guild: discord.Guild) -> List[int]:
+    async def get_roles(self, guild: disnake.Guild) -> List[int]:
         """
         Returns the role IDs of the guild.
 
         :param guild: The guild to get the roles from.
-        :type guild: discord.Guild
+        :type guild: disnake.Guild
         :return:
         :rtype: List[int]
         """
@@ -157,15 +157,15 @@ class LevelingManager(DatabaseChecker):
 
     @DatabaseChecker.uses_database
     async def set_roles(
-        self, guild: discord.Guild, roles: Iterable[discord.Role]
+        self, guild: disnake.Guild, roles: Iterable[disnake.Role]
     ) -> None:
         """
         Sets the roles of the guild.
 
         :param guild: The guild to set the roles in.
-        :type guild: discord.Guild
+        :type guild: disnake.Guild
         :param roles: The roles to set.
-        :type roles: Iterable[discord.Role]
+        :type roles: Iterable[disnake.Role]
         :return:
         :rtype: None
         """
@@ -181,7 +181,7 @@ class LevelingManager(DatabaseChecker):
         self.bot.add_listener(self.__handle_experience, "on_message")
 
     @staticmethod
-    def generate_checks(member: discord.Member):
+    def generate_checks(member: disnake.Member):
         return {"guild": member.guild.id, "member": member.id}
 
     async def __handle_experience(self, message):
@@ -260,7 +260,7 @@ class LevelingManager(DatabaseChecker):
         return None
 
     @DatabaseChecker.uses_database
-    async def get_leaderboard(self, guild: discord.Guild):
+    async def get_leaderboard(self, guild: disnake.Guild):
         guild_info = sorted(
             await self.database.select(
                 self.tables["xp"], [], {"guild": guild.id}, True

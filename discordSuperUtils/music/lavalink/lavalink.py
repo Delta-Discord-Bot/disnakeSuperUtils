@@ -9,7 +9,7 @@ from ..enums import ManagerType
 from ..music import MusicManager
 
 if TYPE_CHECKING:
-    from discord.ext import commands
+    from disnake.ext import commands
 
 __all__ = ("LavalinkMusicManager",)
 

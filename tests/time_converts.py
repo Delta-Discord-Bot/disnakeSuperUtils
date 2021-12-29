@@ -1,6 +1,6 @@
 import asyncio
 
-from discord.ext.commands import BadArgument
+from disnake.ext.commands import BadArgument
 
 import discordSuperUtils
 from tester import Tester

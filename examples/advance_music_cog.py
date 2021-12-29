@@ -1,7 +1,7 @@
 from typing import Optional
 
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 
 import discordSuperUtils
 from discordSuperUtils import MusicManager
@@ -10,7 +10,7 @@ import datetime
 
 bot = commands.Bot(
     command_prefix=commands.when_mentioned_or("-"),
-    intents=discord.Intents.all(),
+    intents=disnake.Intents.all(),
 )
 
 # Custom Check Error
@@ -42,19 +42,19 @@ def ensure_voice_state():
 
 
 # Fetch spotify activity
-def get_user_spotify(member: discord.Member) -> Optional[discord.Spotify]:
+def get_user_spotify(member: disnake.Member) -> Optional[disnake.Spotify]:
     """
     Returns the member's spotify activity, if applicable
-    :param discord.Member member: The member.
+    :param disnake.Member member: The member.
     :return: The member's spotify activity.
-    :rtype: Optional[discord.Spotify]
+    :rtype: Optional[disnake.Spotify]
     """
 
     return next(
         (
             activity
             for activity in member.activities
-            if isinstance(activity, discord.Spotify)
+            if isinstance(activity, disnake.Spotify)
         ),
         None,
     )
@@ -164,9 +164,9 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
         uploader = player.data["videoDetails"]["author"]
         requester = player.requester.mention if player.requester else "Autoplay"
 
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="Now Playing",
-            color=discord.Color.from_rgb(255, 255, 0),
+            color=disnake.Color.from_rgb(255, 255, 0),
             timestamp=datetime.datetime.now(datetime.timezone.utc),
             description=f"[**{player.title}**]({player.url}) by **{uploader}**",
         )
@@ -227,7 +227,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
                 current += split + "\n"
             # Creating embeds list for PageManager
             embeds = [
-                discord.Embed(
+                disnake.Embed(
                     title=f"Lyrics for '{title}' by '{author}', (Page {i + 1}/{len(res)})",
                     description=x,
                 )
@@ -277,11 +277,11 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
             rating = player.data["videoDetails"]["averageRating"]
             requester = player.requester.mention if player.requester else "Autoplay"
 
-            embed = discord.Embed(
+            embed = disnake.Embed(
                 title="Now playing",
                 description=f"**{title}**",
                 timestamp=datetime.datetime.utcnow(),
-                color=discord.Color.from_rgb(0, 255, 255),
+                color=disnake.Color.from_rgb(0, 255, 255),
             )
             embed.add_field(
                 name="Played",
@@ -511,7 +511,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
                 loop_status = "No loop enabled."
 
             if loop_status:
-                embed = discord.Embed(
+                embed = disnake.Embed(
                     title=loop_status,
                     color=0x00FF00,
                     timestamp=datetime.datetime.utcnow(),
@@ -546,7 +546,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
 
     # Spotify song details of a user
     @commands.command()
-    async def spotify_user_song(self, ctx, member: discord.Member = None):
+    async def spotify_user_song(self, ctx, member: disnake.Member = None):
         member = member if member else ctx.author
         spotify_result = get_user_spotify(member)
 
@@ -563,7 +563,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
     # Spotify song from user
     @commands.command()
     @ensure_voice_state()
-    async def play_user_spotify(self, ctx, member: discord.Member = None):
+    async def play_user_spotify(self, ctx, member: disnake.Member = None):
         member = member if member else ctx.author
         spotify_result = get_user_spotify(member)
 
@@ -578,7 +578,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
 
     # Playlist command
     @commands.group(invoke_without_command=True)
-    async def playlists(self, ctx, user: discord.user = None):
+    async def playlists(self, ctx, user: disnake.user = None):
         user = user or ctx.author
         user_playlists = await MusicManager.get_user_playlists(user)
 
@@ -620,7 +620,7 @@ class Music(commands.Cog, discordSuperUtils.CogManager.Cog, name="Music"):
 
     @playlists.command()
     @ensure_voice_state()
-    async def play(self, ctx, index: int, user: discord.member = None):
+    async def play(self, ctx, index: int, user: disnake.member = None):
         # Checking valid index
         index = indexer(index)
 

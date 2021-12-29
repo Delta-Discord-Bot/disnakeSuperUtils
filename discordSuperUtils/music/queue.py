@@ -6,7 +6,7 @@ from .enums import Loops
 
 if TYPE_CHECKING:
     from ..youtube import YoutubeClient
-    import discord
+    import disnake
     from .player import Player
 
 
@@ -153,11 +153,11 @@ class QueueManager:
 
         return self.queue.pop(index)
 
-    def remove_member(self, member: discord.Member) -> List[Player]:
+    def remove_member(self, member: disnake.Member) -> List[Player]:
         """
         Removes the member from the queue.
 
-        :param discord.Member member: The member to remove from the queue.
+        :param disnake.Member member: The member to remove from the queue.
         :return: The players removed.
         :rtype: None
         """

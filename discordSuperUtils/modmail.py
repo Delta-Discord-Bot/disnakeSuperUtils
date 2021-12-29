@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 from typing import Union, List, Optional
 
 from .base import DatabaseChecker
@@ -16,8 +16,8 @@ class ModMailManager(DatabaseChecker):
 
         self.bot.add_listener(self._handle_modmail_requests, "on_message")
 
-    async def _handle_modmail_requests(self, message: discord.Message):
-        if not isinstance(message.channel, discord.DMChannel):
+    async def _handle_modmail_requests(self, message: disnake.Message):
+        if not isinstance(message.channel, disnake.DMChannel):
             return
 
         if message.author.id == self.bot.user.id:
@@ -29,10 +29,10 @@ class ModMailManager(DatabaseChecker):
                 await self.bot.get_context(message=message, cls=commands.Context),
             )
 
-    async def set_channel(self, channel: discord.TextChannel) -> None:
+    async def set_channel(self, channel: disnake.TextChannel) -> None:
         """
         :param channel: Channel that ModMail is sent to.
-        :type channel: discord.TextChannel
+        :type channel: disnake.TextChannel
         :return:
         :rtype: None
         """
@@ -45,12 +45,12 @@ class ModMailManager(DatabaseChecker):
             self.tables["modmail"], table_data, {"guild": channel.guild.id}, table_data
         )
 
-    async def get_channel(self, guild: discord.Guild) -> discord.TextChannel:
+    async def get_channel(self, guild: disnake.Guild) -> disnake.TextChannel:
         """
         :param guild: The guild to fetch the ModMail Channel object for
-        :type guild: discord.Guild
+        :type guild: disnake.Guild
         :return:
-        :rtype: discord.TextChannel
+        :rtype: disnake.TextChannel
         """
 
         channel_id = await self.database.select(
@@ -58,28 +58,28 @@ class ModMailManager(DatabaseChecker):
         )
         return self.bot.get_channel(channel_id["channel"])
 
-    async def get_mutual_guilds(self, user: discord.User) -> List[discord.Guild]:
+    async def get_mutual_guilds(self, user: disnake.User) -> List[disnake.Guild]:
         """
         :param user: User to fetch the mutual guilds with the bot.
-        :type user: discord.User
+        :type user: disnake.User
         :return:
-        :rtype: List[discord.Guild]
+        :rtype: List[disnake.Guild]
         """
 
-        return [x for x in self.bot.guilds if discord.utils.get(x.members, id=user.id)]
+        return [x for x in self.bot.guilds if disnake.utils.get(x.members, id=user.id)]
 
     async def get_modmail_guild(
-        self, ctx: commands.Context, guilds: List[discord.Guild]
-    ) -> Optional[discord.Guild]:
+        self, ctx: commands.Context, guilds: List[disnake.Guild]
+    ) -> Optional[disnake.Guild]:
         """
         :param ctx: Used to fetch channel
         :type ctx: commands.Context
         :param guilds: List of all mutual guilds
-        :type guilds: List[discord.Guild]
+        :type guilds: List[disnake.Guild]
         :return:
-        :rtype: discord.Guild
+        :rtype: disnake.Guild
         """
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="ModMail",
             description="Please type the Guild ID to send modmail to that server",
         )
@@ -87,7 +87,7 @@ class ModMailManager(DatabaseChecker):
             embed.add_field(name=f"{guild}", value=f"{guild.id}")
 
         def check(message):
-            if isinstance(message.channel, discord.DMChannel):
+            if isinstance(message.channel, disnake.DMChannel):
                 return message.author.id == ctx.author.id
 
         await ctx.send(embed=embed)
@@ -107,13 +107,13 @@ class ModMailManager(DatabaseChecker):
         :rtype: str
         """
 
-        embed = discord.Embed(
+        embed = disnake.Embed(
             title="ModMail", description="Please type your message to the Mods."
         )
         await ctx.send(embed=embed)
 
         def check(message):
-            if isinstance(message.channel, discord.DMChannel):
+            if isinstance(message.channel, disnake.DMChannel):
                 return message.author.id == ctx.author.id
 
         msg = await self.bot.wait_for("message", check=check, timeout=60)

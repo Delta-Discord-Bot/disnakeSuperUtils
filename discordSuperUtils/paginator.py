@@ -4,7 +4,7 @@ import asyncio
 from math import ceil
 from typing import TYPE_CHECKING
 
-import discord
+import disnake
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -21,7 +21,7 @@ def generate_embeds(
     string_format="{}",
     footer: str = "",
     display_page_in_footer=False,
-    timestamp: datetime = discord.Embed.Empty,
+    timestamp: datetime = disnake.Embed.Empty,
     page_format: str = "(Page {}/{})",
 ):
     num_of_embeds = ceil((len(list_to_generate) + 1) / fields)
@@ -30,7 +30,7 @@ def generate_embeds(
 
     for i in range(1, num_of_embeds + 1):
         embeds.append(
-            discord.Embed(
+            disnake.Embed(
                 title=title
                 if display_page_in_footer
                 else f"{title} {page_format.format(i, num_of_embeds)}",
@@ -99,7 +99,7 @@ class ButtonsPageManager:
 
         self.index = 0 if not -1 < self.index < len(self.messages) else self.index
 
-        from discord_components import ActionRow, Button, ButtonStyle, DiscordComponents
+        from disnake_components import ActionRow, Button, ButtonStyle, disnakeComponents
 
         DiscordComponents(self.ctx.bot)
 
@@ -115,7 +115,7 @@ class ButtonsPageManager:
         )
 
         message_to_send = self.messages[self.index]
-        # message_to_send must be of type embed, sadly, discord_components breaks the Messageable.send method
+        # message_to_send must be of type embed, sadly, disnake_components breaks the Messageable.send method
         # And breaks the file parameter, too
         message = await self.ctx.send(embed=message_to_send, components=components)
 
@@ -187,7 +187,7 @@ class PageManager:
         self.index = 0 if not -1 < self.index < len(self.messages) else self.index
 
         message_to_send = self.messages[self.index]
-        if isinstance(message_to_send, discord.Embed):
+        if isinstance(message_to_send, disnake.Embed):
             message = await self.ctx.send(embed=message_to_send)
         else:
             message = await self.ctx.send(message_to_send)
@@ -229,7 +229,7 @@ class PageManager:
             await message.remove_reaction(reaction.emoji, user)
             message_to_send = self.messages[self.index]
 
-            if isinstance(message_to_send, discord.Embed):
+            if isinstance(message_to_send, disnake.Embed):
                 await message.edit(embed=message_to_send, content=None)
             else:
                 await message.edit(content=message_to_send, embed=None)

@@ -29,11 +29,11 @@ except ImportError:
     )
 
 import aiosqlite
-import discord
+import disnake
 from motor import motor_asyncio
 
 if TYPE_CHECKING:
-    from discord.ext import commands
+    from disnake.ext import commands
     from .database import Database
     from datetime import timedelta
 
@@ -197,10 +197,10 @@ def generate_column_types(
 
 async def questionnaire(
     ctx: commands.Context,
-    questions: Iterable[Union[str, discord.Embed]],
+    questions: Iterable[Union[str, disnake.Embed]],
     public: bool = False,
     timeout: Union[float, int] = 30,
-    member: discord.Member = None,
+    member: disnake.Member = None,
 ) -> Tuple[List[str], bool]:
     """
     |coro|
@@ -213,13 +213,13 @@ async def questionnaire(
     :param ctx: The context (where the questionnaire will ask the questions).
     :type ctx: commands.Context
     :param questions: The questions the questionnaire will ask.
-    :type questions: Iterable[Union[str, discord.Embed]]
+    :type questions: Iterable[Union[str, disnake.Embed]]
     :param public: A bool indicating if the questionnaire is public.
     :type public: bool
     :param timeout: The number of seconds until the questionnaire will stop and time out.
     :type timeout: Union[float, int]
     :param member: The member the questionnaire will get the answers from.
-    :type member: discord.Member
+    :type member: disnake.Member
     :return: The answers and a boolean indicating if the questionnaire timed out.
     :rtype: Tuple[List[str], bool]
     """
@@ -240,10 +240,10 @@ async def questionnaire(
     for question in questions:
         if isinstance(question, str):
             await ctx.send(question)
-        elif isinstance(question, discord.Embed):
+        elif isinstance(question, disnake.Embed):
             await ctx.send(embed=question)
         else:
-            raise TypeError("Question must be of type 'str' or 'discord.Embed'.")
+            raise TypeError("Question must be of type 'str' or 'disnake.Embed'.")
 
         try:
             message = await ctx.bot.wait_for("message", check=checks, timeout=timeout)
@@ -373,7 +373,7 @@ def create_task(loop: asyncio.AbstractEventLoop, coroutine: Coroutine) -> None:
 
 class CogManager:
     """
-    A CogManager which helps the user use the managers inside discord cogs.
+    A CogManager which helps the user use the managers inside disnake cogs.
     """
 
     class Cog:

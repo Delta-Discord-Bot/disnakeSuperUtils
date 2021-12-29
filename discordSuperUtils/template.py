@@ -5,13 +5,13 @@ import uuid
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any, TYPE_CHECKING, Optional, Union
 
-import discord
-from discord.guild import VerificationLevel
+import disnake
+from disnake.guild import VerificationLevel
 
 from .base import DatabaseChecker
 
 if TYPE_CHECKING:
-    from discord.ext import commands
+    from disnake.ext import commands
     from .database import Database
 
 __all__ = (
@@ -79,7 +79,7 @@ class TemplateInfo(DictionaryConvertible):
         convert_from["verification_level"] = VerificationLevel(
             convert_from["verification_level"] or 0
         )
-        convert_from["explict_content_filter"] = discord.ContentFilter(
+        convert_from["explict_content_filter"] = disnake.ContentFilter(
             convert_from["explict_content_filter"] or 0
         )
 
@@ -129,7 +129,7 @@ class TemplateTextChannel(DictionaryConvertible):
         slowmode: int,
         nsfw: bool,
         channel_id: int,
-        overwrites: Dict[int, discord.PermissionOverwrite],
+        overwrites: Dict[int, disnake.PermissionOverwrite],
     ):
         self.name = name
         self.position = position
@@ -172,7 +172,7 @@ class TemplateVoiceChannel(DictionaryConvertible):
         bitrate: int,
         user_limit: int,
         channel_id: int,
-        overwrites: Dict[int, discord.PermissionOverwrite],
+        overwrites: Dict[int, disnake.PermissionOverwrite],
     ):
         self.name = name
         self.position = position
@@ -214,7 +214,7 @@ class TemplateRole(DictionaryConvertible):
         position: int,
         mentionable: bool,
         role_id: int,
-        permissions: discord.Permissions,
+        permissions: disnake.Permissions,
     ):
         self.default_role = default_role
         self.name = name
@@ -223,7 +223,7 @@ class TemplateRole(DictionaryConvertible):
         self.position = position
         self.mentionable = mentionable
         self.role_id = role_id
-        self.permissions = discord.Permissions(permissions)
+        self.permissions = disnake.Permissions(permissions)
 
     def get_raw(self):
         return {
@@ -322,9 +322,9 @@ class Template:
 
     @staticmethod
     def format_overwrites(
-        overwrites: Dict[int, discord.PermissionOverwrite],
-        roles: Dict[int, discord.Role],
-    ) -> Dict[discord.Role, discord.PermissionOverwrite]:
+        overwrites: Dict[int, disnake.PermissionOverwrite],
+        roles: Dict[int, disnake.Role],
+    ) -> Dict[disnake.Role, disnake.PermissionOverwrite]:
         result_overwrites = {}
 
         for role in roles:
@@ -335,9 +335,9 @@ class Template:
 
     async def apply_settings(
         self,
-        guild: discord.Guild,
+        guild: disnake.Guild,
         reason: str,
-        channels: Dict[int, Union[discord.VoiceChannel, discord.TextChannel]],
+        channels: Dict[int, Union[disnake.VoiceChannel, disnake.TextChannel]],
     ) -> None:
         await guild.edit(
             afk_timeout=self.info.afk_timeout,
@@ -349,8 +349,8 @@ class Template:
         )
 
     async def apply_roles(
-        self, guild: discord.Guild, reason: str
-    ) -> Dict[int, discord.Role]:
+        self, guild: disnake.Guild, reason: str
+    ) -> Dict[int, disnake.Role]:
         roles = await asyncio.gather(
             *[
                 guild.default_role.edit(permissions=role.permissions, reason=reason)
@@ -368,8 +368,8 @@ class Template:
         )
 
     async def apply_categories(
-        self, guild: discord.Guild, reason: str
-    ) -> Dict[int, discord.CategoryChannel]:
+        self, guild: disnake.Guild, reason: str
+    ) -> Dict[int, disnake.CategoryChannel]:
         categories = await asyncio.gather(
             *[
                 guild.create_category_channel(name=category.name, reason=reason)
@@ -383,11 +383,11 @@ class Template:
 
     async def apply_channels(
         self,
-        guild: discord.Guild,
+        guild: disnake.Guild,
         reason: str,
-        categories: Dict[int, discord.CategoryChannel],
-        roles: Dict[int, discord.Role],
-    ) -> Dict[int, discord.TextChannel]:
+        categories: Dict[int, disnake.CategoryChannel],
+        roles: Dict[int, disnake.Role],
+    ) -> Dict[int, disnake.TextChannel]:
         text_channels = await asyncio.gather(
             *[
                 guild.create_text_channel(
@@ -410,11 +410,11 @@ class Template:
 
     async def apply_voice_channels(
         self,
-        guild: discord.Guild,
+        guild: disnake.Guild,
         reason: str,
-        categories: Dict[int, discord.CategoryChannel],
-        roles: Dict[int, discord.Role],
-    ) -> Dict[int, discord.VoiceChannel]:
+        categories: Dict[int, disnake.CategoryChannel],
+        roles: Dict[int, disnake.Role],
+    ) -> Dict[int, disnake.VoiceChannel]:
         voice_channels = await asyncio.gather(
             *[
                 guild.create_voice_channel(
@@ -434,7 +434,7 @@ class Template:
             zip((channel.channel_id for channel in self.voice_channels), voice_channels)
         )
 
-    async def apply(self, guild: discord.Guild) -> None:
+    async def apply(self, guild: disnake.Guild) -> None:
         roles_to_delete = list(
             filter(
                 lambda r: not r.managed
@@ -462,16 +462,16 @@ class Template:
     @staticmethod
     def get_overwrite(
         overwrites: List[Dict[str, Any]], overwrite_object: int
-    ) -> Dict[int, discord.PermissionOverwrite]:
+    ) -> Dict[int, disnake.PermissionOverwrite]:
         result_overwrites = {}
 
         for overwrite in overwrites:
             if overwrite["overwrite_object"] == overwrite_object:
                 result_overwrites[
                     overwrite["overwrite_key"]
-                ] = discord.PermissionOverwrite.from_pair(
-                    discord.Permissions(overwrite["overwrite_pair"]),
-                    discord.Permissions(overwrite["overwrite_second_pair"]),
+                ] = disnake.PermissionOverwrite.from_pair(
+                    disnake.Permissions(overwrite["overwrite_pair"]),
+                    disnake.Permissions(overwrite["overwrite_second_pair"]),
                 )
 
         return result_overwrites
@@ -614,7 +614,7 @@ class TemplateManager(DatabaseChecker):
         )
         self.bot = bot
 
-    async def get_templates(self, guild: discord.Guild = None) -> List[Template]:
+    async def get_templates(self, guild: disnake.Guild = None) -> List[Template]:
         self._check_database()
 
         return [
@@ -636,7 +636,7 @@ class TemplateManager(DatabaseChecker):
         self,
         template_id: str,
         overwrites_object: int,
-        overwrites: discord.PermissionOverwrite,
+        overwrites: disnake.PermissionOverwrite,
     ) -> None:
         self._check_database()
 
@@ -654,7 +654,7 @@ class TemplateManager(DatabaseChecker):
                 },
             )
 
-    async def create_template(self, guild: discord.Guild) -> Template:
+    async def create_template(self, guild: disnake.Guild) -> Template:
         self._check_database()
 
         template_id = str(uuid.uuid4())

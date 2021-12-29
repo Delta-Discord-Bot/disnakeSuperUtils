@@ -10,8 +10,8 @@ from .punishments import Punisher, get_relevant_punishment
 
 if TYPE_CHECKING:
     from .punishments import Punishment
-    import discord
-    from discord.ext import commands
+    import disnake
+    from disnake.ext import commands
 
 
 __all__ = ("PartialInfraction", "Infraction", "InfractionManager")
@@ -23,7 +23,7 @@ class PartialInfraction:
     A partial infraction.
     """
 
-    member: discord.Member
+    member: disnake.Member
     id: str
     reason: str
     date_of_infraction: datetime
@@ -36,7 +36,7 @@ class Infraction:
     """
 
     infraction_manager: InfractionManager
-    member: discord.Member
+    member: disnake.Member
     id: str
 
     def __post_init__(self):
@@ -99,7 +99,7 @@ class InfractionManager(DatabaseChecker, Punisher):
 
     @DatabaseChecker.uses_database
     async def warn(
-        self, ctx: commands.Context, member: discord.Member, reason: str
+        self, ctx: commands.Context, member: disnake.Member, reason: str
     ) -> Infraction:
         generated_id = str(uuid.uuid4())
         await self.database.insert(
@@ -121,7 +121,7 @@ class InfractionManager(DatabaseChecker, Punisher):
         return Infraction(self, member, generated_id)
 
     async def punish(
-        self, ctx: commands.Context, member: discord.Member, punishment: Punishment
+        self, ctx: commands.Context, member: disnake.Member, punishment: Punishment
     ) -> None:
         await self.warn(ctx, member, punishment.punishment_reason)
         await self.call_event("on_punishment", ctx, member, punishment)
@@ -129,7 +129,7 @@ class InfractionManager(DatabaseChecker, Punisher):
     @DatabaseChecker.uses_database
     async def get_infractions(
         self,
-        member: discord.Member,
+        member: disnake.Member,
         infraction_id: str = None,
         from_timestamp: Union[int, float] = 0,
     ) -> List[Infraction]:

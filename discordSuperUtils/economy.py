@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import discord
+import disnake
 from typing import List, Optional
 
 from .base import DatabaseChecker
@@ -15,7 +15,7 @@ class EconomyAccount:
     """
 
     economy_manager: EconomyManager
-    member: discord.Member
+    member: disnake.Member
 
     def __post_init__(self):
         self.table = self.economy_manager.tables["economy"]
@@ -68,10 +68,10 @@ class EconomyManager(DatabaseChecker):
         self.bot = bot
 
     @staticmethod
-    def generate_checks(member: discord.Member):
+    def generate_checks(member: disnake.Member):
         return {"guild": member.guild.id, "member": member.id}
 
-    async def create_account(self, member: discord.Member) -> None:
+    async def create_account(self, member: disnake.Member) -> None:
         self._check_database()
 
         await self.database.insertifnotexists(
@@ -80,7 +80,7 @@ class EconomyManager(DatabaseChecker):
             self.generate_checks(member),
         )
 
-    async def get_account(self, member: discord.Member) -> Optional[EconomyAccount]:
+    async def get_account(self, member: disnake.Member) -> Optional[EconomyAccount]:
         self._check_database()
 
         member_data = await self.database.select(
@@ -96,7 +96,7 @@ class EconomyManager(DatabaseChecker):
         return None
 
     @DatabaseChecker.uses_database
-    async def get_leaderboard(self, guild: discord.Guild) -> List[EconomyAccount]:
+    async def get_leaderboard(self, guild: disnake.Guild) -> List[EconomyAccount]:
         guild_info = sorted(
             await self.database.select(
                 self.tables["economy"], [], {"guild": guild.id}, True

@@ -5,7 +5,7 @@ from typing import Dict, List, Any, TYPE_CHECKING, Union, Optional
 from .enums import PlaylistType
 
 if TYPE_CHECKING:
-    import discord
+    import disnake
     from .music import MusicManager
 
 __slots__ = ("SpotifyTrack", "YoutubeAuthor", "Playlist", "UserPlaylist")
@@ -118,7 +118,7 @@ class UserPlaylist:
     """
 
     music_manager: MusicManager
-    owner: discord.User
+    owner: disnake.User
     id: str
     playlist: Playlist
 

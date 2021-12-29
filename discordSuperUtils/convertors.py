@@ -1,6 +1,6 @@
 from typing import Optional, Union
 
-from discord.ext import commands
+from disnake.ext import commands
 
 
 def isfloat(string: str) -> bool:
