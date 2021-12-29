@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 
 import wavelink
+import disnake
 
 from .equalizer import Equalizer
 
 
 @dataclass(init=False)
-class LavalinkPlayer(wavelink.Player):
+class LavalinkPlayer(wavelink.Player, disnake.VoiceProtocol):
     """
     Represents a LavalinkPlayer.
     """
