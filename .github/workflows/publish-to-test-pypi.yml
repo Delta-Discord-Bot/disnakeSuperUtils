@@ -28,13 +28,14 @@ jobs:
         --wheel
         --outdir dist/
         .
+    
     - name: Publish distribution 📦 to Test PyPI
       uses: pypa/gh-action-pypi-publish@master
       with:
-        password: ${{ secrets.pypi-AgENdGVzdC5weXBpLm9yZwIkNTAwMWU0N2MtOGQ2ZS00ZDZhLWFlMTEtMThkNjJiMWQ2ZGIxAAJCeyJwZXJtaXNzaW9ucyI6IHsicHJvamVjdHMiOiBbImRpc25ha2VzdXBlcnV0aWxzIl19LCAidmVyc2lvbiI6IDF9AAAGIGePBl2JrNNLPEfKOtv-Mxpg9vkYxvsKpxqby-JRSkJ3 }}
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
         repository_url: https://test.pypi.org/legacy/
     - name: Publish distribution 📦 to PyPI
       if: startsWith(github.ref, 'refs/tags')
       uses: pypa/gh-action-pypi-publish@master
       with:
-        password: ${{ secrets.pypi-AgEIcHlwaS5vcmcCJGJjOTVlOGUyLWIzOGItNGI5MS1iOTM5LWQyNzdiOGVmM2VhMwACQnsicGVybWlzc2lvbnMiOiB7InByb2plY3RzIjogWyJkaXNuYWtlc3VwZXJ1dGlscyJdfSwgInZlcnNpb24iOiAxfQAABiD8QCEcd8twjODUPheUZR_qlUpWK6qbNl5c-EhaDxR3jg }}
+        password: ${{ secrets.PYPI_API_TOKEN }}
