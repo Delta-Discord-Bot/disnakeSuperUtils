@@ -866,6 +866,28 @@ class MusicManager(DatabaseChecker):
         await ctx.voice_client.disconnect(force=True)
         return channel
 
+    @ensure_connection()
+    async def stop(self, ctx: commands.Context) -> Optional[disnake.VoiceChannel]:
+        """
+        |coro|
+
+        Stop the player in ctx.
+
+        :param ctx: The context.
+        :type ctx: commands.Context
+        :return: The voice channel it left.
+        :rtype: Optional[disnake.VoiceChannel]
+        """
+
+        if ctx.guild.id in self.queue:
+            self.queue[ctx.guild.id].cleanup()
+            del self.queue[ctx.guild.id]
+
+        await maybe_coroutine(ctx.voice_client.stop)
+
+        channel = ctx.voice_client.channel
+        return channel
+
     @ensure_connection(check_queue=True)
     async def now_playing(self, ctx: commands.Context) -> Optional[Player]:
         """
