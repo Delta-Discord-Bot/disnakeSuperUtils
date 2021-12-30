@@ -1,6 +1,6 @@
 name: Publish Python 🐛 distribution package 📦 to Test PyPI
 
-on: [deployment]
+on: push
 
 jobs:
   build-n-publish:
