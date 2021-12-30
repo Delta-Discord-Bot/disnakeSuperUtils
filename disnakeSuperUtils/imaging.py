@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import datetime
+from datetime import datetime, timezone
 import os
 import textwrap
 import time
@@ -421,9 +421,9 @@ class ImageManager:
         album_text_position = 150, 80
         start_duration_text_position = 150, 119
         end_duration_text_position = 508, 119
-
+        
         played_duration = (
-            datetime.datetime.utcnow() - spotify_activity.start
+            datetime.now(timezone.utc) - spotify_activity.start
         ).total_seconds()
         total_duration = spotify_activity.duration.total_seconds()
 

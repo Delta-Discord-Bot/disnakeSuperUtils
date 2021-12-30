@@ -203,7 +203,6 @@ class Player:
     def create_player(
         cls, requester: disnake.Member, query: str, player: dict
     ) -> Player:
-    
         try:
             return cls(
                 requester,
