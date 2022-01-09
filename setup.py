@@ -13,7 +13,7 @@ setup(
         "disnakeSuperUtils.music.lavalink": ["*"],
     },
     include_package_data=True,
-    version="0.8.0",
+    version="0.9.0",
     license="MIT",
     description="Discord Bot Development made easy!",
     long_description=README,
