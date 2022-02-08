@@ -34,6 +34,6 @@ from .client import DatabaseClient, ExtendedClient, ManagerClient
 from .twitch import TwitchManager, get_twitch_oauth_key
 
 __title__ = "disnakeSuperUtils"
-__version__ = "0.9.1"
+__version__ = "0.9.2"
 __author__ = "Koyashie07, Adam7100 & Ariz#2214"
 __license__ = "MIT"

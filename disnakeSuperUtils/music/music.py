@@ -238,8 +238,10 @@ class MusicManager(DatabaseChecker):
                 if member.guild.id in self.queue:
                     self.queue[member.guild.id].cleanup()
                     del self.queue[member.guild.id]
-
-                await maybe_coroutine(voice_client.stop)
+                try:
+                    await maybe_coroutine(voice_client.stop)
+                except AttributeError:
+                    pass
 
         if member == self.bot.user and channel_change and before.channel:
             await self.cleanup(voice_client, member.guild)
